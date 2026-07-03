@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ultimate Sci‑Fi Tic Tac Toe Pro</title>
+<style>
+body{margin:0;background:#050816;color:white;font-family:Arial;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh}
+#bg{position:fixed;inset:0;z-index:-1}
+.screen{display:none;text-align:center;width:100%}
+.active{display:block}
+.panel{background:rgba(0,0,0,.4);padding:20px;border-radius:20px;border:2px solid #00e5ff;box-shadow:0 0 25px #00e5ff}
+h1{color:#00e5ff;text-shadow:0 0 20px #00e5ff}
+button{padding:16px 28px;margin:8px;font-size:22px;border-radius:14px;border:2px solid #00e5ff;background:#08162f;color:#00e5ff;box-shadow:0 0 15px #00e5ff}
+button:hover{transform:scale(1.05)}
+.board{display:grid;grid-template-columns:repeat(3,min(28vw,110px));gap:6px;justify-content:center}
+.cell{width:min(28vw,110px);height:min(28vw,110px);font-size:min(16vw,70px)}
+.x{color:#00e5ff;text-shadow:0 0 20px #00e5ff}
+.o{color:#ff4df3;text-shadow:0 0 20px #ff4df3}
+#celebrate{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:100px}
+</style>
+</head>
+<body><div id="coinHUD" style="position:fixed;top:8px;right:8px;z-index:9999;background:#08162f;border:2px solid #0ff;color:#0ff;padding:8px 12px;border-radius:10px">🪙 <span id="coinValue">0</span></div>
+<canvas id="bg"></canvas>
+<div id="celebrate">🏆✨</div>
+
+<div id="start" class="screen active"><div class="panel">
+<h1>🚀 SCI‑FI GAMES</h1><button onclick="show('games')">GET STARTED</button>
+</div></div>
+
+<div id="games" class="screen"><div class="panel"><h1>Select Game</h1><button onclick="show('mode')">❌ Tic Tac Toe</button><button onclick="show('rps')">🪨📄✂️ Rock Paper Scissors</button><button onclick="show('pong')">🏓 Pong</button><button onclick="show('duel')">🔢 AI Number Duel</button><button onclick="show('shop')">🛒 Shop</button></div></div>
+
+
+<div id="rps" class="screen"><div class="panel">
+<h1>🪨📄✂️ Rock Paper Scissors</h1>
+
+<button onclick="toggleRPSSettings()" style="font-size:18px;padding:10px 18px">⚙️ Settings</button>
+<div id="rpsSettings" style="display:none;margin:10px">
+<button onclick="rpsYou=0;rpsAI=0;document.getElementById('rpsScore').textContent='🧑 You:0 | 🤖 AI:0';resetRPS()">🔄 Reset</button><button onclick='undoMove()'>↩️ Undo</button><div id='matchInfo'>Best of 3 (Preview)</div>
+<button onclick="document.getElementById('rpsSettings').style.display='none'">▶️ Resume</button>
+<button onclick="show('games')">🎮 Change Game</button>
+<button onclick="show('start')">🏠 Home</button>
+<button onclick="alert('More options coming soon!')">➕ More</button>
+</div>
+
+<div style="display:flex;justify-content:center;gap:12px;margin-top:10px">
+<div style="width:60px;height:60px;border:2px solid #00e5ff"></div>
+<div style="width:60px;height:60px;border:2px solid #00e5ff"></div>
+<div style="width:60px;height:60px;border:2px solid #00e5ff"></div>
+</div>
+
+<div id="aiPick" style="font-size:80px;height:90px;margin-top:10px">❔</div>
+<div>🤖 AI</div>
+
+<div id="centerLine" style="height:4px;background:#00e5ff;box-shadow:0 0 15px #00e5ff;margin:20px 0"></div>
+<div id="rpsResult" style="font-size:32px;font-weight:bold;height:50px"></div>
+
+<div id="playerPick" style="font-size:80px;height:90px">❔</div>
+<div>🧑 Player</div>
+
+<div style="display:flex;justify-content:center;gap:12px;margin-top:12px">
+<button onclick="playRPS('Rock')">🪨</button>
+<button onclick="playRPS('Paper')">📄</button>
+<button onclick="playRPS('Scissors')">✂️</button>
+</div>
+
+<div id="rpsScore" style="margin-top:15px">🧑 You:0 | 🤖 AI:0</div>
+<br>
+<button onclick="show('games')">🏠 Games</button>
+</div></div>
+
+<div id="mode" class="screen"><div class="panel">
+<h1>Select Mode</h1>
+<button onclick="mode='ai';show('difficulty')">🤖 AI</button>
+<button onclick="mode='multi';show('game');resetGame()">👥 Multiplayer</button>
+</div></div>
+
+<div id="difficulty" class="screen"><div class="panel">
+<h1>Difficulty</h1>
+<button onclick="startAI('easy')">Easy</button>
+<button onclick="startAI('medium')">Medium</button>
+<button onclick="startAI('hard')">Hard</button>
+<button onclick="startAI('impossible')">Impossible</button>
+</div></div>
+
+<div id="game" class="screen"><div class="panel">
+<h2 id="status">Player X Turn</h2>
+<div>🏆 X:<span id="xw">0</span> | O:<span id="ow">0</span> | Draw:<span id="dw">0</span> | 🔥 Streak:<span id="streak">0</span></div>
+<button id="soundBtn" onclick="toggleSound()">🔊 ON</button><button id="musicBtn" onclick="toggleBackgroundMusic()">🎵 OFF</button>
+<button onclick="toggleTTTSettings()">⚙️ Settings</button>
+<div id="tttSettings" style="display:none;margin:10px">
+<button onclick="resetGame()">🔄 Reset Game</button>
+<button onclick="show('games')">🎮 Change Game</button>
+<button onclick="show('start')">🏠 Home</button>
+<button onclick="toggleTTTSettings()">▶️ Resume</button>
+</div>
+<div style="position:relative;display:inline-block"><div class="board" id="board"></div><div id="winLine" style="position:absolute;height:8px;background:white;box-shadow:0 0 15px white,0 0 30px #00e5ff;display:none;transform-origin:left center"></div></div>
+<button onclick="resetGame()">Reset</button><button onclick='undoMove()'>↩️ Undo</button><div id='matchInfo'>Best of 3 (Preview)</div>
+</div></div>
+
+
+<div id="duel" class="screen"><div class="panel">
+<h1>🤖 AI Number Duel v2</h1><div id='duelLives' style='font-size:24px;margin:8px'>👤 ❤️❤️❤️ &nbsp; 🤖 ❤️❤️❤️</div>
+<p>Choose your secret number (1-100).</p>
+<input id='mySecret' type='number' min='1' max='100' value='50' style='padding:10px;font-size:20px;width:120px'>
+<br><button onclick="startDuel()">▶ Start Duel</button>
+<div id='duelPlay' style='display:none'>
+<h3>🤖 AI Guess: <span id='aiGuess'>50</span></h3>
+<button onclick='duelHigher()'>Higher</button>
+<button onclick='duelLower()'>Lower</button>
+<button onclick='duelCorrect()'>Correct</button>
+<h3>Your Guess</h3><input id='yourGuess' type='number' min='1' max='100' style='width:220px;padding:14px;font-size:28px;text-align:center'>
+<button style='font-size:26px;padding:14px 24px' onclick='checkYourGuess()'>🎯 Guess</button>
+<div id='duelScore'>👤0 : 🤖0</div><div id='history' style='max-height:120px;overflow:auto;border:1px solid cyan;margin:8px;padding:4px'></div><div id='duelMsg'></div></div>
+<button onclick="show('games')">⬅ Back</button>
+<script>
+let aiNum=0,lo=1,hi=100,aig=50,ps=0,as=0;
+function startDuel(){aiNum=Math.floor(Math.random()*100)+1;lo=1;hi=100;aig=50;aiGuess.textContent=aig;duelPlay.style.display='block';history.innerHTML='';duelMsg.textContent='Game Started!';}
+function logm(s){history.innerHTML+='<div>'+s+'</div>';history.scrollTop=history.scrollHeight;}
+let aiPending=false;function duelHigher(){logm('AI:'+aig+' ↑');lo=aig+1;aiPending=true;duelMsg.textContent='👤 Your Turn! Guess the AI number.';}
+function duelLower(){logm('AI:'+aig+' ↓');hi=aig-1;aiPending=true;duelMsg.textContent='👤 Your Turn! Guess the AI number.';}
+function duelCorrect(){as++;duelScore.textContent='👤'+ps+' : 🤖'+as;duelMsg.textContent='🎉 AI Wins!';celebrate.style.display='flex';setTimeout(()=>celebrate.style.display='none',1000);}
+function checkYourGuess(){let g=+yourGuess.value;logm('You:'+g);if(g==aiNum){ps++;duelScore.textContent='👤'+ps+' : 🤖'+as;duelMsg.textContent='🎉 You Win!';celebrate.style.display='flex';setTimeout(()=>celebrate.style.display='none',1000);return;}duelMsg.textContent=(g<aiNum?'Higher! ':'Lower! ')+'🤖 AI is thinking...';if(aiPending){setTimeout(()=>{aig=Math.floor((lo+hi)/2);aiGuess.textContent=aig;duelMsg.textContent='🤖 AI guessed '+aig;aiPending=false;},800);}}
+</script>
+</div></div>
+
+<script>
+let mode='ai',difficulty='hard',board=Array(9).fill(''),current='X',over=false;
+let xw=0,ow=0,dw=0,streak=0,sound=true;
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function startAI(d){difficulty=d;show('game');resetGame();}
+
+const boardEl=document.getElementById('board');
+for(let i=0;i<9;i++){let b=document.createElement('button');b.className='cell';b.onclick=()=>move(i);boardEl.appendChild(b);}
+
+let ac;
+function tone(f,t=.1){
+ if(!sound) return;
+ try{
+  ac=ac||new (AudioContext||webkitAudioContext)();
+  let o=ac.createOscillator(),g=ac.createGain();
+  o.connect(g);g.connect(ac.destination);
+  o.frequency.value=f; g.gain.value=.05;
+  o.start(); o.stop(ac.currentTime+t);
+ }catch(e){}
+}
+function toggleSound(){sound=!sound;soundBtn.textContent=sound?'🔊 ON':'🔇 OFF';}
+
+function render(){
+ [...boardEl.children].forEach((c,i)=>{
+   c.textContent=board[i];
+   c.className='cell '+(board[i]=='X'?'x':board[i]=='O'?'o':'');
+ });
+}
+function winner(p){return wins.find(w=>w.every(i=>board[i]==p));}
+
+function move(i){
+ if(over||board[i]) return;
+ if(mode==='multi'){
+   board[i]=current; tone(current==='X'?900:500); render();
+   if(check(current)) return;
+   current=current==='X'?'O':'X';
+   status.textContent='Player '+current+' Turn';
+   return;
+ }
+ board[i]='X'; tone(900); render();
+ if(check('X')) return;
+ setTimeout(aiMove,350);
+}
+
+function aiMove(){
+ let m=getMove();
+ board[m]='O'; tone(450); render();
+ check('O');
+}
+
+function getMove(){
+ let e=[]; for(let i=0;i<9;i++) if(board[i]=='') e.push(i);
+ if(difficulty==='easy') return e[Math.floor(Math.random()*e.length)];
+ if(difficulty==='medium' && Math.random()<0.5) return e[Math.floor(Math.random()*e.length)];
+ if(board[4]=='') return 4;
+ for(let w of wins){
+   let o=w.filter(i=>board[i]=='O').length, emp=w.filter(i=>board[i]=='').length;
+   if(o===2&&emp===1) return w.find(i=>board[i]=='');
+ }
+ for(let w of wins){
+   let x=w.filter(i=>board[i]=='X').length, emp=w.filter(i=>board[i]=='').length;
+   if(x===2&&emp===1) return w.find(i=>board[i]=='');
+ }
+ return e[Math.floor(Math.random()*e.length)];
+}
+
+
+function drawWinLine(w){
+ const cells=document.querySelectorAll('.cell');
+ const line=document.getElementById('winLine');
+ const wrap=line.parentElement.getBoundingClientRect();
+ const a=cells[w[0]].getBoundingClientRect();
+ const b=cells[w[2]].getBoundingClientRect();
+
+ const x1=a.left+a.width/2-wrap.left;
+ const y1=a.top+a.height/2-wrap.top;
+ const x2=b.left+b.width/2-wrap.left;
+ const y2=b.top+b.height/2-wrap.top;
+
+ line.style.display='block';
+ line.style.left=x1+'px';
+ line.style.top=y1+'px';
+ line.style.width=Math.hypot(x2-x1,y2-y1)+'px';
+ line.style.transform='rotate('+(Math.atan2(y2-y1,x2-x1)*180/Math.PI)+'deg)';
+}
+
+function check(p){
+ const winCombo=winner(p); if(winCombo){ drawWinLine(winCombo);
+   over=true;
+   if(p==='X'){xw++;streak++;} else {ow++;streak=0;}
+   xwEl.textContent=xw;owEl.textContent=ow;streakEl.textContent=streak;
+   status.textContent=p+' WINS!';
+   celebrate();
+   setTimeout(resetGame,2000);
+   return true;
+ }
+ if(!board.includes('')){
+   over=true;dw++;dwEl.textContent=dw;status.textContent='DRAW';
+   setTimeout(resetGame,2000);
+   return true;
+ }
+ return false;
+}
+
+function celebrate(){
+ celebrateBox.style.display='flex';
+ tone(1000);setTimeout(()=>tone(1300),120);setTimeout(()=>tone(1600),240);
+ setTimeout(()=>celebrateBox.style.display='none',1200);
+}
+
+function resetGame(){
+board=Array(9).fill('');
+current='X';
+over=false;
+status.textContent='Player X Turn';
+render();
+const l=document.getElementById('winLine');
+if(l) l.style.display='none';
+}
+
+const xwEl=document.getElementById('xw'),owEl=document.getElementById('ow'),dwEl=document.getElementById('dw');
+const streakEl=document.getElementById('streak'),celebrateBox=document.getElementById('celebrate');
+
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');
+function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();onresize=rs;
+let pts=[...Array(120)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:1+Math.random()*3}));
+(function anim(){cx.clearRect(0,0,cv.width,cv.height);pts.forEach(p=>{p.y+=p.v;if(p.y>innerHeight){p.y=0;p.x=Math.random()*innerWidth;}cx.fillStyle='#00e5ff';cx.fillRect(p.x,p.y,2,2)});requestAnimationFrame(anim)})();
+
+
+let rpsYou=0,rpsAI=0;
+
+function toggleRPSSettings(){
+ const m=document.getElementById('rpsSettings');
+ m.style.display=m.style.display==='none'?'block':'none';
+}
+
+function playRPS(choice){
+ const opts=['Rock','Paper','Scissors'];
+ const em={Rock:'🪨',Paper:'📄',Scissors:'✂️'};
+
+ document.getElementById('playerPick').textContent=em[choice];
+ document.getElementById('aiPick').textContent='🤔';
+ document.getElementById('rpsResult').textContent='';
+ document.getElementById('centerLine').style.display='block';
+
+ setTimeout(()=>{
+   const ai=opts[Math.floor(Math.random()*3)];
+   document.getElementById('aiPick').textContent=em[ai];
+
+   let result='🤝 DRAW';
+   if(choice!==ai){
+      if((choice==='Rock'&&ai==='Scissors')||(choice==='Paper'&&ai==='Rock')||(choice==='Scissors'&&ai==='Paper')){
+         result='🏆 YOU WIN'; rpsYou++;
+      } else {
+         result='🤖 AI WINS'; rpsAI++;
+      }
+   }
+
+   document.getElementById('centerLine').style.display='none';
+   document.getElementById('rpsResult').textContent=result;
+   document.getElementById('rpsScore').textContent='🧑 You:'+rpsYou+' | 🤖 AI:'+rpsAI;
+
+   setTimeout(resetRPS,2500);
+ },2000);
+}
+
+function resetRPS(){
+ document.getElementById('playerPick').textContent='❔';
+ document.getElementById('aiPick').textContent='❔';
+ document.getElementById('rpsResult').textContent='';
+ document.getElementById('centerLine').style.display='block';
+}
+
+function toggleTTTSettings(){
+ const m=document.getElementById('tttSettings');
+ m.style.display=(m.style.display==='block'?'none':'block');
+}
+
+let bgAudioCtx=null,bgOsc=null,bgGain=null,bgMusicOn=false;
+
+function toggleBackgroundMusic(){
+ try{
+   if(!bgMusicOn){
+      bgAudioCtx = bgAudioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      bgOsc = bgAudioCtx.createOscillator();
+      bgGain = bgAudioCtx.createGain();
+      bgOsc.type='sine';
+      bgOsc.frequency.value=140;
+      bgGain.gain.value=0.015;
+      bgOsc.connect(bgGain);
+      bgGain.connect(bgAudioCtx.destination);
+      bgOsc.start();
+      bgMusicOn=true;
+      const b=document.getElementById('musicBtn');
+      if(b) b.textContent='🎵 ON';
+   }else{
+      if(bgOsc) bgOsc.stop();
+      bgOsc=null;
+      bgMusicOn=false;
+      const b=document.getElementById('musicBtn');
+      if(b) b.textContent='🎵 OFF';
+   }
+ }catch(e){}
+}
+
+</script>
+
+
+
+<div id="pong" class="screen"><div class="panel">
+<h1>🏓 Pong Ultra v12 R1.1</h1>
+<div><button onclick="setPongMode('ai')">🤖 VS AI</button><button onclick="setPongMode('p2')">👥 2 Player</button></div><canvas id="pongCanvas" width="400" height="700" style="background:#000;border:2px solid #00e5ff;max-width:100%;touch-action:none"></canvas>
+<div style="position:fixed;right:12px;bottom:12px;font-size:24px" id="pongScore">Score: 0</div>
+<button onclick="show('games')">⬅ Back</button>
+</div></div>
+
+<script>
+setTimeout(()=>{
+const c=document.getElementById('pongCanvas');
+if(!c) return;
+const g=c.getContext('2d');
+
+let score=0;
+let playerX=140;
+let aiX=140;
+const paddleW=120;
+
+let ball={x:200,y:350,vx:4,vy:5,r:10};
+
+function moveTouch(clientX){
+ const r=c.getBoundingClientRect();
+ playerX=clientX-r.left-paddleW/2;
+ playerX=Math.max(0,Math.min(c.width-paddleW,playerX));
+}
+
+c.addEventListener('touchstart',e=>{
+ e.preventDefault();
+ moveTouch(e.touches[0].clientX);
+},{passive:false});
+
+c.addEventListener('touchmove',e=>{
+ e.preventDefault();
+ moveTouch(e.touches[0].clientX);
+},{passive:false});
+
+c.addEventListener('mousemove',e=>moveTouch(e.clientX));
+
+function hitVibrate(){
+ if(navigator.vibrate) navigator.vibrate(15);
+}
+
+function loop(){
+ aiX += ((ball.x-paddleW/2)-aiX)*0.06;
+
+ ball.x+=ball.vx;
+ ball.y+=ball.vy;
+
+ if(ball.x<ball.r || ball.x>c.width-ball.r) ball.vx*=-1;
+
+ if(ball.y<35 &&
+    ball.x>aiX &&
+    ball.x<aiX+paddleW){
+      let hit=((ball.x-(aiX+paddleW/2))/(paddleW/2));
+      ball.vx=hit*8;
+      ball.vy=Math.abs(ball.vy);
+ }
+
+ if(ball.y>c.height-35 &&
+    ball.x>playerX &&
+    ball.x<playerX+paddleW &&
+    ball.vy>0){
+      let hit=((ball.x-(playerX+paddleW/2))/(paddleW/2));
+      ball.vx=hit*8;
+      ball.vy=-Math.abs(ball.vy);
+      score++;
+      hitVibrate();
+ }
+
+ if(ball.y<0){
+   score++;
+   ball={x:200,y:350,vx:4,vy:5,r:10};
+ }
+
+ if(ball.y>c.height){
+   score=0;
+   ball={x:200,y:350,vx:4,vy:-5,r:10};
+ }
+
+ document.getElementById('pongScore').innerText='Score: '+score;
+
+ g.clearRect(0,0,c.width,c.height);
+
+ g.strokeStyle='#00e5ff';
+ g.setLineDash([10,10]);
+ g.beginPath();
+ g.moveTo(0,c.height/2);
+ g.lineTo(c.width,c.height/2);
+ g.stroke();
+ g.setLineDash([]);
+
+ g.shadowBlur=20;
+ g.shadowColor='#00e5ff';
+ g.fillStyle='#00e5ff';
+
+ g.fillRect(aiX,15,paddleW,14);
+ g.fillRect(playerX,c.height-30,paddleW,14);
+
+ g.beginPath();
+ g.arc(ball.x,ball.y,ball.r,0,Math.PI*2);
+ g.fill();
+
+ requestAnimationFrame(loop);
+}
+loop();
+},300);
+</script>
+<script>setTimeout(()=>{const c=document.getElementById('dodge');if(!c)return;const g=c.getContext('2d');let px=140,s=0,e={x:100,y:-40};c.ontouchmove=v=>{let r=c.getBoundingClientRect();px=v.touches[0].clientX-r.left-20;v.preventDefault()};(function f(){g.clearRect(0,0,320,520);g.fillStyle='#0ff';g.fillRect(px,470,40,40);e.y+=5+s*0.02;if(e.y>540){e.y=-40;e.x=Math.random()*280;s++;dscore.textContent='Score:'+s}g.fillStyle='#f44';g.fillRect(e.x,e.y,40,40);if(e.y>430&&e.y<510&&Math.abs(e.x-px)<40){alert('Game Over! Score '+s);s=0;e.y=-40}requestAnimationFrame(f)})();},500);</script>
+
+<script>
+let playerLives=3,aiLives=3;
+function updateLives(){let e=document.getElementById('duelLives');if(e)e.innerHTML='👤 '+'❤️'.repeat(playerLives)+' &nbsp; 🤖 '+'❤️'.repeat(aiLives);}
+setTimeout(updateLives,100);
+if(typeof startDuel==='function'){const s=startDuel;startDuel=function(){playerLives=3;aiLives=3;s();updateLives();}}
+</script>
+<script>
+let lastBoard=null;
+const _move=move;
+move=function(i){lastBoard=board.slice();_move(i);}
+function undoMove(){
+ if(lastBoard && !over){
+   board=lastBoard.slice();
+   render();
+   status.textContent='Move Undone';
+ }
+}
+</script>
+<div id="shop" class="screen"><div class="panel">
+<h1>🛒 Theme Shop</h1>
+<p>More themes coming!</p>
+<button>💙 Neon Blue (Free)</button>
+<button>💚 Neon Green - 100🪙</button>
+<button>❤️ Neon Red - 100🪙</button>
+<button>💜 Neon Purple - 150🪙</button>
+<button>🟡 Neon Gold - 250🪙</button>
+<button>🌈 Rainbow - 500🪙</button>
+<button>🌌 Galaxy - 750🪙</button>
+<button onclick="show('games')">⬅ Back</button>
+</div></div>
+
+<script>
+// Pong settings foundation
+let pongTargetScore=7;
+</script>
+<script>
+let coins=+localStorage.getItem('ugcCoins')||0;
+function refreshCoins(){coinValue.textContent=coins;localStorage.setItem('ugcCoins',coins);}
+refreshCoins();
+const _oldCheck=check;check=function(p){const w=_oldCheck(p);if(w&&p==='X'){let r={easy:10,medium:15,hard:20,impossible:30}[difficulty]||15;coins+=r;refreshCoins();}return w;};
+</script>
+<script>
+let pongMode='ai';
+// Part1 foundation
+const PONG_WIN_SCORE=7;
+let topPlayer={score:0},bottomPlayer={score:0};
+function resetPongMatch(){topPlayer.score=0;bottomPlayer.score=0;}
+
+let p1Score=0,p2Score=0;
+function setPongMode(m){pongMode=m;alert('Pong mode: '+(m==='p2'?'2 Player':'VS AI'));}
+</script>
+
+<script>
+// Pong Ultra Part 2: dual-touch foundation
+let topPaddleX=140,bottomPaddleX=140;
+const pongCanvas=document.getElementById('pongCanvas');
+if(pongCanvas){
+ pongCanvas.addEventListener('touchmove',e=>{
+   e.preventDefault();
+   const r=pongCanvas.getBoundingClientRect();
+   for(const t of e.touches){
+      const x=t.clientX-r.left-60;
+      const y=t.clientY-r.top;
+      if(y<r.height/2) topPaddleX=Math.max(0,Math.min(280,x));
+      else bottomPaddleX=Math.max(0,Math.min(280,x));
+   }
+ },{passive:false});
+}
+</script>
+<script>
+const GAME_WIDTH=400,GAME_HEIGHT=700,WIN_SCORE=7;
+let gameMode='p2';
+let player1={x:145,y:20,width:110,height:14,score:0};
+let player2={x:145,y:666,width:110,height:14,score:0};
+let ultraBall={x:200,y:350,radius:10,speed:6,vx:5,vy:6};
+</script>
+<script>
+// Reply1 upgrade: dual touch paddle control
+let topPaddle={x:140,y:15},bottomPaddle={x:140,y:670};
+const paddleWidth2=120,paddleHeight2=14;
+(function(){
+ const c=document.getElementById('pongCanvas');
+ if(!c) return;
+ c.addEventListener('touchmove',function(e){
+   const r=c.getBoundingClientRect();e.preventDefault();
+   for(const t of e.touches){
+     let x=Math.max(0,Math.min(c.width-paddleWidth2,t.clientX-r.left-paddleWidth2/2));
+     if(t.clientY-r.top<c.height/2) topPaddle.x=x;
+     else bottomPaddle.x=x;
+   }
+ },{passive:false});
+})();
+</script>
+<script>
+const owned=JSON.parse(localStorage.getItem('ugcOwned')||'{"Neon Blue":true}');
+const costs={"Neon Green":100,"Neon Red":100,"Neon Purple":150,"Neon Gold":250,"Rainbow":500,"Galaxy":750};
+document.querySelectorAll('#shop button').forEach(b=>{
+ let t=b.textContent;
+ let n=Object.keys(costs).find(k=>t.includes(k))|| (t.includes('Neon Blue')?'Neon Blue':null);
+ if(!n||n=='Neon Blue') return;
+ b.onclick=()=>{if(owned[n]){alert(n+' already owned');return;}
+ if(coins<costs[n]){alert('Not enough coins');return;}
+ coins-=costs[n];refreshCoins();owned[n]=true;localStorage.setItem('ugcOwned',JSON.stringify(owned));b.textContent='✅ '+n+' (Owned)';};
+ if(owned[n]) b.textContent='✅ '+n+' (Owned)';
+});
+</script>
+
+<style>:root{--theme:#00e5ff;--bg:#08162f;}button,.panel,h1{border-color:var(--theme)!important;color:var(--theme)!important;box-shadow:0 0 15px var(--theme)!important}button{background:var(--bg)!important}.panel{box-shadow:0 0 25px var(--theme)!important}.x{color:var(--theme)!important}</style>
+<script>
+const themeColors={"Neon Blue":"#00e5ff","Neon Green":"#00ff66","Neon Red":"#ff3355","Neon Purple":"#bb55ff","Neon Gold":"#ffd700","Rainbow":"#ff0080","Galaxy":"#7a5cff"};
+let currentTheme=localStorage.getItem('ugcTheme')||'Neon Blue';
+function applyTheme(n){currentTheme=n;localStorage.setItem('ugcTheme',n);document.documentElement.style.setProperty('--theme',themeColors[n]);document.documentElement.style.setProperty('--bg','#08162f');}
+window.addEventListener('load',()=>{applyTheme(currentTheme);document.querySelectorAll('#shop button').forEach(b=>{let t=b.textContent;Object.keys(themeColors).forEach(k=>{if(t.includes(k)&&localStorage.getItem('ugcOwned')?.includes(k)){b.onclick=()=>applyTheme(k);b.textContent='⭐ '+k+' (Equipped)';}});});
+setInterval(()=>{if(currentTheme==='Rainbow'){let h=(Date.now()/20)%360;document.documentElement.style.setProperty('--theme','hsl('+h+',100%,60%)');}},50);
+</script>
+</body>
+</html>
