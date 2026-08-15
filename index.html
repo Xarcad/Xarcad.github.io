@@ -314,8 +314,54 @@ button{position:relative;overflow:hidden}
 body.theme-rainbow{animation:rainbowCycle 8s linear infinite}
 body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2a12 0%,#050816 60%),radial-gradient(ellipse at 80% 80%,#2a1f0a 0%,#050816 60%)}
 </style>
+
+<style id="id-sketch-style">
+#profileCreate{padding:12px;overflow:hidden!important}
+#profileCreate .idCreateCard{
+  width:min(430px,92vw)!important;max-width:430px!important;
+  max-height:96vh!important;overflow:hidden!important;
+  padding:18px 18px 14px!important;border-radius:20px!important;
+}
+.idLabel{display:block;text-align:left;font-size:17px;font-weight:700;margin:4px 0 2px}
+.idInput{height:42px!important;margin:2px 0 3px!important;padding:8px 11px!important}
+#profileCreate .pcMsg{min-height:14px;font-size:11px;margin:0 0 2px}
+.genderRow{display:flex;gap:8px;margin:2px 0 5px}
+.genderBtn{flex:1;padding:9px 6px;border:2px solid #00e5ff;border-radius:9px;background:#08162f;color:#fff;font-weight:700}
+.genderBtn.selected{background:#00e5ff;color:#06101d}
+.idPicGrid{display:grid!important;grid-template-columns:repeat(6,1fr);gap:5px!important;margin:3px 0 7px!important}
+.idPicGrid .pcAvatarOpt{width:auto!important;height:42px!important;font-size:25px!important;margin:0!important}
+.makeIdBtn{width:100%!important;height:44px!important;margin:4px 0 0!important;font-size:17px!important;font-weight:800!important}
+@media (max-height:700px){
+  #profileCreate .idCreateCard{transform:scale(.86);transform-origin:center center}
+}
+</style>
+
+
+<style id="better-password-style">
+.passwordRules{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;
+  text-align:left;font-size:11px;line-height:16px;margin:1px 0 4px;
+  opacity:.9
+}
+.passwordRules span{color:#ff6b6b}
+.passwordRules span.ok{color:#62e66f}
+#pcPassword{letter-spacing:.5px}
+</style>
+
 </head>
 <body>
+<script>
+/* XArcade fresh-install reset: clears old profile/progress once so a new ID can be created. */
+(function(){
+  try{
+    if(localStorage.getItem('__xarcadeFreshReset_v1') !== '1'){
+      localStorage.clear();
+      localStorage.setItem('__xarcadeFreshReset_v1','1');
+    }
+  }catch(e){}
+})();
+</script>
+
 <canvas id="fxCanvas"></canvas>
 <div id="popupOverlay"><div class="popupCard" id="popupCardBox"></div></div>
 <div id="bgPhoto"></div>
@@ -340,18 +386,35 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 </div>
 
 <div id="profileCreate">
- <div class="pcCard">
-   <h2>👤 Create Your Profile</h2>
-   <p style="font-size:13px;opacity:.8">This is your one-time profile for this device.</p>
-   <input class="pcInput" id="pcUsername" maxlength="20" placeholder="Username (3-20 chars, letters/numbers/_)" oninput="validateUsername()">
+ <div class="pcCard idCreateCard">
+   <label class="idLabel">Username</label>
+   <input class="pcInput idInput" id="pcUsername" maxlength="20"
+          placeholder="Enter username" oninput="validateUsername()">
    <div class="pcMsg" id="pcUsernameMsg"></div>
-   <input class="pcInput" id="pcDisplayName" maxlength="24" placeholder="Display Name (optional)">
-   <input class="pcInput" id="pcCountry" maxlength="30" placeholder="Country (optional)">
-   <p style="margin:10px 0 4px;font-size:13px">🖼️ Choose an Avatar</p>
-   <div class="pcAvatarRow" id="pcAvatarRow"></div>
-   <p style="margin:10px 0 4px;font-size:13px">🎨 Avatar Frame</p>
-   <div class="pcAvatarRow" id="pcFrameRow"></div>
-   <button id="pcContinueBtn" onclick="finishProfileCreation()" disabled style="width:100%;margin-top:14px;opacity:.5">Continue</button>
+
+   <label class="idLabel">Password</label>
+   <input class="pcInput idInput" id="pcPassword" type="password" maxlength="20"
+          placeholder="Enter password" oninput="validateUsername()">
+   <div id="pcPasswordRules" class="passwordRules">
+     <span id="pwLen">✕ 8-20 characters</span>
+     <span id="pwUpper">✕ 1 uppercase letter</span>
+     <span id="pwLower">✕ 1 lowercase letter</span>
+     <span id="pwNum">✕ 1 number</span>
+   </div>
+
+   <label class="idLabel">Birth date</label>
+   <input class="pcInput idInput" id="pcBirthDate" type="date">
+
+   <label class="idLabel">Gender (optional)</label>
+   <div class="genderRow">
+     <button type="button" class="genderBtn selected" id="genderMale" onclick="selectGender('Male')">Male</button>
+     <button type="button" class="genderBtn" id="genderFemale" onclick="selectGender('Female')">Female</button>
+   </div>
+
+   <label class="idLabel">ID Pic</label>
+   <div class="idPicGrid" id="pcAvatarRow"></div>
+
+   <button id="pcContinueBtn" class="makeIdBtn" onclick="finishProfileCreation()" disabled>Make ID</button>
  </div>
 </div>
 
@@ -3058,6 +3121,16 @@ function getOverallBestAcrossAll(){
   });
   return {bestTime,bestMoves,totalGames,gamesWon};
 }
+/* One-time requested +100 coin bonus */
+(function(){
+  if(localStorage.getItem('xarcadeStartingBonus100')!=='1'){
+    if(typeof SAVE==='object' && SAVE){
+      SAVE.coins = Number(SAVE.coins||0) + 100;
+      localStorage.setItem('xarcadeStartingBonus100','1');
+      if(typeof saveGame==='function') saveGame();
+    }
+  }
+})();
 function renderHome(){
   const o=getOverallBestAcrossAll();
   document.getElementById('ns-qsBestTime').textContent=o.bestTime!=null?formatTime(o.bestTime):'--:--';
@@ -4233,7 +4306,7 @@ const SPIN_REWARDS=[
  {label:'💎 +100 Diamonds',type:'diamond',amount:100},
  {label:'💎 +250 Diamonds (RARE)',type:'diamond',amount:250,rare:true},
  {label:'🏅 Random Badge Progress',type:'badgeBoost'},
- {label:'🎁 Mystery Chest',type:'chestNav'},
+ {label:'+100 Remo',type:'remo',amount:100},
  {label:'🎉 JACKPOT +1000 Remo',type:'jackpot',amount:1000}
 ];
 function pickSpinReward(){
@@ -4659,7 +4732,7 @@ document.addEventListener('DOMContentLoaded',syncHudBar);
 const AVATAR_OPTIONS=['🤖','🥷','👽','🧑‍🚀','🦸','🧙','🐱','🐺','🦊','🐉'];
 const FRAME_OPTIONS=[{id:'default',icon:'⚪',name:'Default'},{id:'neon',icon:'🔵',name:'Neon'},{id:'gold',icon:'🟡',name:'Gold'}];
 const RESERVED_NAMES=['admin','administrator','owner','system','moderator','support','chatgpt'];
-let __pcSelectedAvatar='🤖',__pcSelectedFrame='default';
+let __pcSelectedAvatar='🤖',__pcSelectedFrame='default',__pcGender='Male';
 
 function loadPlayerProfile(){try{return JSON.parse(localStorage.getItem('playerProfile'));}catch(e){return null;}}
 function savePlayerProfile(p){localStorage.setItem('playerProfile',JSON.stringify(p));}
@@ -4675,7 +4748,14 @@ function renderAvatarPicker(){
  const row=document.getElementById('pcAvatarRow');
  row.innerHTML=AVATAR_OPTIONS.map(a=>'<div class="pcAvatarOpt'+(a===__pcSelectedAvatar?' selected':'')+'" onclick="selectPcAvatar(\''+a+'\')">'+a+'</div>').join('');
  const frow=document.getElementById('pcFrameRow');
- frow.innerHTML=FRAME_OPTIONS.map(f=>'<div class="pcAvatarOpt'+(f.id===__pcSelectedFrame?' selected':'')+'" onclick="selectPcFrame(\''+f.id+'\')" title="'+f.name+'">'+f.icon+'</div>').join('');
+ if(frow) frow.innerHTML='';
+}
+function selectPcAvatar(a){__pcSelectedAvatar=a;renderAvatarPicker();}
+function selectPcFrame(f){__pcSelectedFrame=f;renderAvatarPicker();}
+function selectGender(g){
+ __pcGender=g;
+ document.getElementById('genderMale').classList.toggle('selected',g==='Male');
+ document.getElementById('genderFemale').classList.toggle('selected',g==='Female');
 }
 function selectPcAvatar(a){__pcSelectedAvatar=a;renderAvatarPicker();}
 function selectPcFrame(f){__pcSelectedFrame=f;renderAvatarPicker();}
@@ -4694,17 +4774,31 @@ function validateUsername(){
  else {text='✅ Username available!';}
  msg.textContent=text;
  msg.className='pcMsg '+(ok&&text?'ok':(text?'err':''));
- btn.disabled=!ok||name.length===0;
+ const pass=(document.getElementById('pcPassword')||{}).value||'';
+ const dob=(document.getElementById('pcBirthDate')||{}).value||'';
+ const pLen=pass.length>=8&&pass.length<=20;
+ const pUpper=/[A-Z]/.test(pass);
+ const pLower=/[a-z]/.test(pass);
+ const pNum=/[0-9]/.test(pass);
+ const setRule=(id,good)=>{const e=document.getElementById(id);if(e){e.classList.toggle('ok',good);e.textContent=(good?'✓ ':'✕ ')+e.textContent.replace(/^[✓✕] /,'');}};
+ setRule('pwLen',pLen); setRule('pwUpper',pUpper); setRule('pwLower',pLower); setRule('pwNum',pNum);
+ btn.disabled=!ok||name.length===0||!pLen||!pUpper||!pLower||!pNum||!dob;
  btn.style.opacity=btn.disabled?'.5':'1';
 }
 
 function finishProfileCreation(){
  const username=document.getElementById('pcUsername').value.trim();
  if(username.length<3) return;
+ const password=document.getElementById('pcPassword').value;
+ const birthDate=document.getElementById('pcBirthDate').value;
+ if(password.length<8 || password.length>20 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !birthDate) return;
  const profile={
    username,
-   displayName:document.getElementById('pcDisplayName').value.trim()||username,
-   country:document.getElementById('pcCountry').value.trim(),
+   displayName:username,
+   country:'',
+   password,
+   birthDate,
+   gender:__pcGender,
    avatar:__pcSelectedAvatar,
    frame:__pcSelectedFrame,
    playerId:generatePlayerId(),
@@ -4740,6 +4834,10 @@ function checkFirstLaunch(){
    },1400);
  }
 }
+
+document.addEventListener('input',function(e){
+ if(e.target && (e.target.id==='pcPassword'||e.target.id==='pcBirthDate')) validateUsername();
+});
 document.addEventListener('DOMContentLoaded',checkFirstLaunch);
 </script>
 
@@ -5484,7 +5582,7 @@ img,canvas{display:block;}
 <!-- ================= ACHIEVEMENTS ================= -->
 <section class="xa-screen" id="xa-screen-achievements" data-screen="achievements">
   <div class="xa-topbar">
-    <button class="xa-btn xa-icon-btn" data-xa-home>⬅</button>
+    <button class="xa-btn xa-icon-btn" data-xa-home aria-label="Back to XArcade Runner">⬅ Back</button>
     <div class="xa-title">🏆 Achievements</div>
   </div>
   <div class="xa-stack" id="xa-achList" style="overflow-y:auto"></div>
@@ -5515,7 +5613,7 @@ img,canvas{display:block;}
 <!-- ================= INDEPENDENCE EVENT ================= -->
 <section class="xa-screen" id="xa-screen-event" data-screen="event">
   <div class="xa-topbar">
-    <button class="xa-btn xa-icon-btn" data-xa-home>⬅</button>
+    <button class="xa-btn xa-icon-btn" data-xa-home aria-label="Back to XArcade Runner">⬅ Back</button>
     <div class="xa-title">🎇 Independence Event</div>
   </div>
   <div class="xa-panel" id="xa-eventStatusPanel" style="margin-bottom:10px; text-align:center; font-size:12.5px; font-weight:700"></div>
@@ -6402,7 +6500,7 @@ function doSpin(){
     const prize=SPIN_PRIZES[idx];
     if(prize.give.coins) addCoins(prize.give.coins);
     if(prize.give.diamonds) addDiamonds(prize.give.diamonds);
-    if(prize.give.booster) SAVE.boosterActive=true;
+        if(prize.give.booster) SAVE.boosterActive=true;
     saveGame();
     showRewardPopup('🎡 You won: '+prize.label+'!', 'Spin again anytime for '+SPIN_COST+' 💎.');
     wheel.style.transition='none';
