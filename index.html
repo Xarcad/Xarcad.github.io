@@ -147,7 +147,7 @@ button:hover{transform:scale(1.05)}
 .gameCard .cardDiff{font-size:10px;margin-top:4px;color:#ffd700;opacity:.9}
 @keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes rpsShake{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-16px) rotate(-10deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-16px) rotate(10deg)}}
-.rpsShaking{display:inline-block;animation:rpsShake .42s ease-in-out infinite;will-change:transform;transform:translateZ(0);backface-visibility:hidden}
+.rpsShaking{display:inline-block;animation:rpsShake .5s ease-in-out infinite;will-change:transform}
 .rpsChoiceBtn:disabled{opacity:.45;cursor:default}
 .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rippleAnim .5s linear;pointer-events:none}
 @keyframes rippleAnim{to{transform:scale(4);opacity:0}}
@@ -167,41 +167,55 @@ button:hover{transform:scale(1.05)}
 .invItem .qty{font-size:22px;font-weight:bold;color:#00e5ff}
 .statRow{display:flex;justify-content:space-between;max-width:480px;margin:6px auto;font-size:15px;border-bottom:1px solid rgba(0,229,255,.2);padding-bottom:4px}
 
+
+/* ===== Unique Code System ===== */
+.codeOverlay{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;z-index:10001;padding:16px;box-sizing:border-box}
+.codeOverlay.open{display:flex}
+.codeBox{background:linear-gradient(145deg,rgba(5,12,28,.98),rgba(10,16,38,.98));border:2px solid #2b73ff;border-radius:22px;padding:24px 20px;max-width:380px;width:92%;box-shadow:0 0 40px rgba(0,110,255,.35),inset 0 0 25px rgba(0,229,255,.04);text-align:center}
+.codeTitle{font-size:24px;font-weight:800;margin:0 0 14px;color:#fff}
+.uniqueCodeValue{font-size:26px;font-weight:900;letter-spacing:4px;color:#00e5ff;background:rgba(0,229,255,.08);border:1.5px solid #00e5ff;border-radius:12px;padding:13px 8px;margin:8px 0 18px;user-select:all}
+.codeLabel{display:block;text-align:left;font-size:13px;font-weight:700;margin:10px 0 5px;color:#eafcff}
+.codeInput{width:100%;box-sizing:border-box;padding:12px;font-size:17px;letter-spacing:2px;text-align:center;border-radius:10px;border:2px solid #1765d8;background:#061126;color:#eafcff;outline:none;text-transform:uppercase}
+.codeInput:focus{border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,.2)}
+.codeMsg{min-height:18px;font-size:12px;margin:6px 0;color:#9fb9d8}
+.codeMsg.ok{color:#00ff88}.codeMsg.err{color:#ff5566}.referralBox{margin:10px 0;padding:10px;border:1px solid rgba(0,229,255,.3);border-radius:10px;background:rgba(0,229,255,.05);font-size:13px}.referralBox b{color:#00e5ff}
+.codeActions{display:flex;gap:8px;margin-top:10px}.codeActions button{flex:1}
+
 /* ===== Profile Creation ===== */
-#profileCreate{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;background:rgba(3,5,15,.75);backdrop-filter:blur(10px)}
+#profileCreate{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;background:rgba(3,5,15,.88);backdrop-filter:blur(10px);padding:12px;box-sizing:border-box}
 #profileCreate.open{display:flex}
-.pcCard{background:rgba(10,14,30,.95);border:2px solid #00e5ff;border-radius:24px;padding:26px 22px;max-width:380px;width:90%;box-shadow:0 0 40px #00e5ff;text-align:center;animation:popIn .5s ease-out;max-height:90vh;overflow-y:auto}
-.pcAvatarRow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
-.pcAvatarOpt{font-size:28px;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(0,229,255,.4);cursor:pointer;background:rgba(0,229,255,.05);animation:floatCard 3s ease-in-out infinite}
-.pcAvatarOpt.selected{border-color:#ffd700;box-shadow:0 0 14px #ffd700;background:rgba(255,215,0,.1)}
-.pcInput{width:100%;box-sizing:border-box;padding:12px;font-size:16px;border-radius:10px;border:2px solid #00e5ff;background:#08162f;color:#00e5ff;margin:6px 0}
-.pcMsg{font-size:13px;min-height:18px;margin:4px 0}
+.pcCard{background:linear-gradient(145deg,rgba(5,12,28,.98),rgba(10,16,38,.98));border:2px solid #2b73ff;border-radius:22px;padding:22px 20px;max-width:920px;width:96%;box-shadow:0 0 45px rgba(0,110,255,.35),inset 0 0 30px rgba(0,229,255,.04);text-align:center;animation:popIn .5s ease-out;max-height:none;height:auto;overflow:hidden}
+.pcTitle{font-size:32px;margin:0 0 4px;color:#fff;text-shadow:0 0 14px #00e5ff;letter-spacing:1px}
+.pcSubtitle{font-size:13px;opacity:.75;margin:0 0 16px}
+.pcFormGrid{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:18px;text-align:left}
+.pcFields{min-width:0}
+.pcLabel{display:block;font-weight:700;font-size:13px;margin:9px 0 4px;color:#eafcff}
+.pcLabel .req{color:#ff4d5f}
+.pcInput{width:100%;box-sizing:border-box;padding:11px 12px;font-size:16px;border-radius:9px;border:2px solid #1765d8;background:#061126;color:#eafcff;margin:0 0 2px;outline:none}
+.pcInput:focus{border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,.2)}
+.pcGender{appearance:auto}
+.pcMsg{font-size:12px;min-height:16px;margin:2px 0;color:#9fb9d8}
 .pcMsg.ok{color:#00ff88}
 .pcMsg.err{color:#ff5566}
-#loadWelcome{position:fixed;inset:0;z-index:19999;display:none;align-items:center;justify-content:center;background:#050816;opacity:0;transition:opacity .4s ease}
+.pcIdPicRow{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:7px 0 3px;max-width:430px}
+.pcIdPicOpt{font-size:25px;width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(0,229,255,.35);cursor:pointer;background:rgba(0,229,255,.05);transition:.15s;user-select:none}
+.pcIdPicOpt:hover{transform:translateY(-2px);border-color:#00e5ff;box-shadow:0 0 10px rgba(0,229,255,.35)}
+.pcIdPicOpt.selected{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,.7);background:rgba(0,229,255,.15);transform:scale(1.06)}
+.pcRestrictions{border:1.5px solid #1e75d9;border-radius:14px;padding:15px 14px;background:rgba(0,20,50,.35);height:max-content}
+.pcRestrictions h3{margin:0 0 10px;text-align:center;color:#00e5ff;font-size:18px}
+.pcRule{padding:9px 0;border-bottom:1px dashed rgba(0,229,255,.25);font-size:12px;line-height:1.35;color:#dceaff}
+.pcRule:last-child{border-bottom:0}
+.pcRule b{color:#fff}
+.pcTerms{margin:12px 0 5px;font-size:12px;display:flex;align-items:center;gap:8px}
+.pcTerms input{width:18px;height:18px;accent-color:#00e5ff}
+#pcContinueBtn{width:100%;margin-top:10px;padding:13px 18px;border-radius:11px;border:2px solid #00e5ff;background:linear-gradient(90deg,#1158ff,#c51cff);color:#fff;font-weight:800;font-size:18px;box-shadow:0 0 18px rgba(0,229,255,.35);cursor:pointer}
+#pcContinueBtn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
+@media(max-width:720px){#profileCreate{padding:4px;overflow:hidden}.pcCard{width:100%;max-width:none;height:100%;max-height:100%;box-sizing:border-box;padding:8px 8px;overflow:hidden;border-radius:14px}.pcTitle{font-size:23px;margin:0 0 1px}.pcSubtitle{font-size:10px;margin:0 0 5px}.pcFormGrid{grid-template-columns:minmax(0,1fr) 145px;gap:7px;height:calc(100% - 38px);align-items:start}.pcLabel{font-size:10px;margin:3px 0 2px}.pcInput{padding:6px 7px;font-size:12px;border-radius:6px}.pcMsg{font-size:9px;min-height:10px;margin:0}.pcIdPicRow{grid-template-columns:repeat(6,30px);gap:3px;margin:3px 0 1px;max-width:none}.pcIdPicOpt{font-size:17px;width:30px;height:30px;border-radius:6px}.pcRestrictions{padding:7px 6px;border-radius:8px;height:auto}.pcRestrictions h3{font-size:13px;margin:0 0 4px}.pcRule{padding:4px 0;font-size:8px;line-height:1.15}.pcTerms{margin:4px 0 2px;font-size:9px;gap:4px}.pcTerms input{width:13px;height:13px}.pcTerms+ #pcContinueBtn,#pcContinueBtn{margin-top:3px;padding:7px 8px;border-radius:7px;font-size:13px}}
+@media(max-width:720px) and (max-height:700px){.pcTitle{font-size:19px}.pcSubtitle{display:none}.pcFormGrid{height:calc(100% - 25px);gap:5px}.pcLabel{font-size:9px;margin:2px 0 1px}.pcInput{padding:5px;font-size:11px}.pcIdPicRow{grid-template-columns:repeat(6,26px)}.pcIdPicOpt{width:26px;height:26px;font-size:15px}.pcRule{padding:3px 0;font-size:7px}.pcRestrictions h3{font-size:11px}.pcTerms{font-size:8px}.pcTerms input{width:11px;height:11px}.pcTerms+ #pcContinueBtn,#pcContinueBtn{font-size:11px;padding:6px}}
+#loadWelcome{position:fixed;inset:0;z-index:19999;display:none;align-items:center;justify-content:center;background:#050816;opacity:0;transition:opacity .4s ease;padding:0;box-sizing:border-box}
 #loadWelcome.open{opacity:1;display:flex}
-#loadWelcome .pcCard{animation:avatarEnter .6s ease-out}
+#loadWelcome .pcCard{animation:avatarEnter .6s ease-out;margin:auto;position:relative;top:0;left:0;transform:translateZ(0)}
 
-/* ===== Online Hub ===== */
-.demoBanner{background:rgba(255,170,0,.12);border:1px solid #ffaa00;color:#ffcc66;border-radius:12px;padding:8px 12px;font-size:12px;margin:0 0 14px}
-.onlineStatusPill{display:inline-flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;border-radius:14px;background:rgba(0,229,255,.08);border:1px solid #00e5ff}
-.hubGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:600px;margin:14px auto}
-.hubCard{padding:16px;border:2px solid #00e5ff;border-radius:16px;background:rgba(0,229,255,.06);text-align:center;cursor:pointer}
-.hubCard .icon{font-size:32px}
-.rankBadge{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:bold;font-size:14px}
-.rank-Bronze{background:#8c5a2b}.rank-Silver{background:#8a8a8a}.rank-Gold{background:#d4af00;color:#222}
-.rank-Platinum{background:#4ec7d6;color:#222}.rank-Diamond{background:#7a5cff}.rank-Master{background:#ff4df3}.rank-Grandmaster{background:#ff2222}
-.chatBox{max-width:480px;margin:10px auto;text-align:left;border:1px solid #00e5ff;border-radius:12px;padding:8px;max-height:180px;overflow-y:auto;background:rgba(0,229,255,.04)}
-.chatMsg{font-size:14px;margin:3px 0}
-.quickMsgRow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0}
-.quickMsgRow button{font-size:13px;padding:6px 10px;margin:2px}
-.bracket{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:10px auto;text-align:left}
-.bracketMatch{border:1px solid #00e5ff;border-radius:10px;padding:6px 10px;font-size:13px;background:rgba(0,229,255,.05)}
-.bracketMatch.won{border-color:#00ff88}
-.toastWrap{position:fixed;top:70px;right:10px;z-index:30000;display:flex;flex-direction:column;gap:8px}
-.toast{background:rgba(10,14,30,.95);border:1px solid #00e5ff;border-radius:12px;padding:10px 14px;font-size:13px;box-shadow:0 0 15px #00e5ff;animation:popIn .3s ease-out}
-.lbRow{display:flex;justify-content:space-between;max-width:480px;margin:4px auto;font-size:14px;padding:4px 8px;border-bottom:1px solid rgba(0,229,255,.15)}
-.lbRow.me{background:rgba(255,215,0,.12);border-radius:8px}
 
 /* ================= PREMIUM ANIMATIONS & VFX ================= */
 #fxCanvas{position:fixed;inset:0;z-index:25000;pointer-events:none}
@@ -314,54 +328,8 @@ button{position:relative;overflow:hidden}
 body.theme-rainbow{animation:rainbowCycle 8s linear infinite}
 body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2a12 0%,#050816 60%),radial-gradient(ellipse at 80% 80%,#2a1f0a 0%,#050816 60%)}
 </style>
-
-<style id="id-sketch-style">
-#profileCreate{padding:12px;overflow:hidden!important}
-#profileCreate .idCreateCard{
-  width:min(430px,92vw)!important;max-width:430px!important;
-  max-height:96vh!important;overflow:hidden!important;
-  padding:18px 18px 14px!important;border-radius:20px!important;
-}
-.idLabel{display:block;text-align:left;font-size:17px;font-weight:700;margin:4px 0 2px}
-.idInput{height:42px!important;margin:2px 0 3px!important;padding:8px 11px!important}
-#profileCreate .pcMsg{min-height:14px;font-size:11px;margin:0 0 2px}
-.genderRow{display:flex;gap:8px;margin:2px 0 5px}
-.genderBtn{flex:1;padding:9px 6px;border:2px solid #00e5ff;border-radius:9px;background:#08162f;color:#fff;font-weight:700}
-.genderBtn.selected{background:#00e5ff;color:#06101d}
-.idPicGrid{display:grid!important;grid-template-columns:repeat(6,1fr);gap:5px!important;margin:3px 0 7px!important}
-.idPicGrid .pcAvatarOpt{width:auto!important;height:42px!important;font-size:25px!important;margin:0!important}
-.makeIdBtn{width:100%!important;height:44px!important;margin:4px 0 0!important;font-size:17px!important;font-weight:800!important}
-@media (max-height:700px){
-  #profileCreate .idCreateCard{transform:scale(.86);transform-origin:center center}
-}
-</style>
-
-
-<style id="better-password-style">
-.passwordRules{
-  display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;
-  text-align:left;font-size:11px;line-height:16px;margin:1px 0 4px;
-  opacity:.9
-}
-.passwordRules span{color:#ff6b6b}
-.passwordRules span.ok{color:#62e66f}
-#pcPassword{letter-spacing:.5px}
-</style>
-
 </head>
 <body>
-<script>
-/* XArcade fresh-install reset: clears old profile/progress once so a new ID can be created. */
-(function(){
-  try{
-    if(localStorage.getItem('__xarcadeFreshReset_v1') !== '1'){
-      localStorage.clear();
-      localStorage.setItem('__xarcadeFreshReset_v1','1');
-    }
-  }catch(e){}
-})();
-</script>
-
 <canvas id="fxCanvas"></canvas>
 <div id="popupOverlay"><div class="popupCard" id="popupCardBox"></div></div>
 <div id="bgPhoto"></div>
@@ -371,9 +339,24 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 <div id="remoHUD" style="position:fixed;top:10px;right:10px;background:rgba(0,0,0,.6);border:2px solid #00e5ff;border-radius:12px;padding:8px 14px;color:#00e5ff;font-weight:bold;z-index:9999">🪙 Remo: <span id="remoCount">0</span></div>
 <div id="diamondHUD">💎 Diamonds: <span id="diamondCount">0</span></div>
 
-<div id="start" class="screen active"><div class="panel">
-<h1>🚀 SCI‑FI GAMES</h1><button onclick="show('games')">GET STARTED</button>
-</div></div>
+<div id="start" class="screen active"></div>
+
+
+<div class="codeOverlay" id="codeOverlay">
+ <div class="codeBox popupAnim">
+  <div class="codeTitle">🔑 Your Unique Code</div>
+  <div class="uniqueCodeValue" id="myUniqueCode">XXXXXXXX</div>
+  <label class="codeLabel" for="enterCodeInput">ENTER CODE</label>
+  <input class="codeInput" id="enterCodeInput" maxlength="13" autocomplete="off" placeholder="Enter code" oninput="this.value=this.value.toUpperCase();clearCodeMessage()">
+  <div class="codeMsg" id="codeMsg"></div>
+  <div class="referralBox">👥 Referrals: <b id="referralCount">0</b>/27<br>🎁 Friend: 🪙 50 + 💎 5 &nbsp; | &nbsp; You: 🪙 30 + 💎 1</div>
+  <div class="codeActions">
+   <button onclick="applyCode()">APPLY CODE</button>
+   <button onclick="copyMyCode()">COPY</button>
+  </div>
+  <button onclick="closeCodePanel()" style="width:100%;margin-top:8px">⬅ Back</button>
+ </div>
+</div>
 
 <div id="loadWelcome">
  <div class="pcCard">
@@ -386,35 +369,52 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 </div>
 
 <div id="profileCreate">
- <div class="pcCard idCreateCard">
-   <label class="idLabel">Username</label>
-   <input class="pcInput idInput" id="pcUsername" maxlength="20"
-          placeholder="Enter username" oninput="validateUsername()">
-   <div class="pcMsg" id="pcUsernameMsg"></div>
+ <div class="pcCard">
+   <h2 class="pcTitle">ID MAKING</h2>
+   <p class="pcSubtitle">Create your unique X-Arcade Player ID</p>
+   <div class="pcFormGrid">
+    <div class="pcFields">
+      <label class="pcLabel">USERNAME <span class="req">*</span></label>
+      <input class="pcInput" id="pcUsername" maxlength="16" autocomplete="off" placeholder="Enter username" oninput="validateProfileForm()">
+      <div class="pcMsg" id="pcUsernameMsg"></div>
 
-   <label class="idLabel">Password</label>
-   <input class="pcInput idInput" id="pcPassword" type="password" maxlength="20"
-          placeholder="Enter password" oninput="validateUsername()">
-   <div id="pcPasswordRules" class="passwordRules">
-     <span id="pwLen">✕ 8-20 characters</span>
-     <span id="pwUpper">✕ 1 uppercase letter</span>
-     <span id="pwLower">✕ 1 lowercase letter</span>
-     <span id="pwNum">✕ 1 number</span>
+      <label class="pcLabel">PASSWORD <span class="req">*</span></label>
+      <input class="pcInput" id="pcPassword" type="password" maxlength="16" placeholder="Enter password" oninput="validateProfileForm()">
+      <div class="pcMsg" id="pcPasswordMsg"></div>
+
+      <label class="pcLabel">BIRTH DATE <span class="req">*</span></label>
+      <input class="pcInput" id="pcBirthDate" type="date" oninput="validateProfileForm()">
+      <div class="pcMsg" id="pcBirthMsg"></div>
+
+      <label class="pcLabel">GENDER <span style="opacity:.65">(OPTIONAL)</span></label>
+      <select class="pcInput pcGender" id="pcGender">
+        <option value="">Select gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+        <option value="prefer_not">Prefer not to say</option>
+      </select>
+
+      <label class="pcLabel">ID PIC <span class="req">*</span></label>
+      <div class="pcIdPicRow" id="pcIdPicRow"></div>
+      <div class="pcMsg" id="pcIdPicMsg">Select one picture for your Player ID.</div>
+
+      <label class="pcTerms"><input id="pcTerms" type="checkbox" onchange="validateProfileForm()"> I agree to the Terms &amp; Conditions</label>
+      <button id="pcContinueBtn" onclick="finishProfileCreation()" disabled>MAKE ID</button>
+    </div>
+
+    <div class="pcRestrictions">
+      <h3>RESTRICTIONS</h3>
+      <div class="pcRule">👤 <b>Username</b><br>3-16 characters long.</div>
+      <div class="pcRule">🔐 <b>Password</b><br>6-16 characters long.</div>
+      <div class="pcRule">📅 <b>Birth date</b><br>Enter a valid date.</div>
+      <div class="pcRule">⚧️ <b>Gender</b><br>Optional.</div>
+      <div class="pcRule">🪪 <b>ID Pic</b><br>Choose one of the available pictures.</div>
+      <div class="pcRule">🚫 <b>Username</b><br>Must be unique and cannot use reserved names.</div>
+      <div class="pcRule">🚫 <b>Characters</b><br>No spaces or special characters in username.</div>
+      <div class="pcRule">🛡️ <b>Safety</b><br>No inappropriate or offensive usernames.</div>
+    </div>
    </div>
-
-   <label class="idLabel">Birth date</label>
-   <input class="pcInput idInput" id="pcBirthDate" type="date">
-
-   <label class="idLabel">Gender (optional)</label>
-   <div class="genderRow">
-     <button type="button" class="genderBtn selected" id="genderMale" onclick="selectGender('Male')">Male</button>
-     <button type="button" class="genderBtn" id="genderFemale" onclick="selectGender('Female')">Female</button>
-   </div>
-
-   <label class="idLabel">ID Pic</label>
-   <div class="idPicGrid" id="pcAvatarRow"></div>
-
-   <button id="pcContinueBtn" class="makeIdBtn" onclick="finishProfileCreation()" disabled>Make ID</button>
  </div>
 </div>
 
@@ -441,6 +441,7 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 </div>
 
 <div class="dashGrid" id="dashGrid">
+ <div class="gameCard" onclick="openCodePanel()"><span class="cardIcon">🔑</span><div class="cardName">Code</div><div class="cardSub">Your unique code</div></div>
  <div class="gameCard" onclick="rippleNav(event,()=>{show('xa-app'); if(typeof window.xaOnEnter==='function') window.xaOnEnter();})"><span class="cardIcon">🏃</span><div class="cardName">XArcade Runner</div><div class="cardSub">🇮🇳 Independence Update!</div></div>
  <div class="gameCard" onclick="rippleNav(event,()=>{ if(window.nsOpen) window.nsOpen(); })"><span class="cardIcon">🔢</span><div class="cardName">Number Slide</div><div class="cardSub">Classic sliding puzzle</div></div>
  <div class="gameCard" onclick="rippleNav(event,()=>show('mode'))"><span class="cardIcon">❌</span><div class="cardName">Tic Tac Toe</div><div class="cardSub">Beat the AI</div></div>
@@ -455,8 +456,7 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
  <div class="gameCard" onclick="rippleNav(event,()=>{renderProfile();show('profile');})"><span class="cardIcon">👤</span><div class="cardName">Profile</div><div class="cardSub">Your progress</div></div>
  <div class="gameCard" onclick="rippleNav(event,()=>{renderInventory();show('inventory');})"><span class="cardIcon">🎒</span><div class="cardName">Inventory</div><div class="cardSub">Items &amp; power-ups</div></div>
  <div class="gameCard" onclick="rippleNav(event,()=>{renderStatistics();show('statistics');})"><span class="cardIcon">📊</span><div class="cardName">Statistics</div><div class="cardSub">Full breakdown</div></div>
- <div class="gameCard" onclick="rippleNav(event,()=>show('guide'))"><span class="cardIcon">📖</span><div class="cardName">Guide</div><div class="cardSub">How to play</div></div>
- <div class="gameCard" onclick="rippleNav(event,()=>{renderOnlineHub();show('onlineHub');})"><span class="cardIcon">🌐</span><div class="cardName">Online</div><div class="cardSub" id="onlineCardStatus">Checking...</div></div>
+ <div class="gameCard" onclick="rippleNav(event,()=>show('guide'))"><span class="cardIcon">📖</span><div class="cardName">Guide</div><div class="cardSub">How to play</div></div><div class="cardSub">Checking...</div></div>
 </div>
 </div></div>
 
@@ -467,7 +467,7 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 <div class="guideBlock"><h3>❌ Tic Tac Toe</h3>
 <p><b>Controls:</b> Tap a cell to place your mark.</p>
 <p><b>Objective:</b> Get 3 of your marks in a row, column, or diagonal before your opponent.</p>
-<p><b>Winning Rules:</b> Play vs AI (Easy/Medium/Hard/Impossible) or a friend in Multiplayer. First to complete a line wins; a full board with no line is a Draw.</p>
+<p><b>Winning Rules:</b> Play vs AI (Easy/Medium/Hard/Impossible). First to complete a line wins; a full board with no line is a Draw.</p>
 <p><b>Rewards:</b> Win as X vs AI for Remo — Easy +2, Medium +5, Hard +10, Impossible +15. A Draw earns +7 Remo.</p>
 </div>
 <div class="guideBlock"><h3>🪨 Rock Paper Scissors</h3>
@@ -491,7 +491,7 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 <div class="guideBlock"><h3>🤖 AI Number Duel</h3>
 <p><b>Controls:</b> Pick a secret number, then guess the AI's number using the Higher/Lower/Correct buttons and your own guess field.</p>
 <p><b>Objective:</b> Guess the AI's secret number before it guesses yours.</p>
-<p><b>Winning Rules:</b> Each side has 3 lives. A wrong guess costs a life; the match ends when either side hits 0. Answer Higher/Lower/Correct honestly about your own secret — the AI uses true binary search and will catch impossible answers.</p>
+<p><b>Winning Rules:</b> There is no guess limit. Keep guessing until you correctly find the AI's secret number, while the AI keeps narrowing down your secret using Higher/Lower/Correct. Answer honestly about your own secret — the AI uses true binary search and will catch impossible answers.</p>
 <p><b>Rewards:</b> Complete Daily Tasks for Duel wins to earn bonus Remo.</p>
 </div>
 <div class="guideBlock"><h3>🔢 Number Slide</h3>
@@ -622,100 +622,6 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 <button onclick="show('games')">⬅ Back</button>
 </div></div>
 
-<div id="onlineHub" class="screen"><div class="panel">
-<h1>🌐 Online</h1>
-<div class="demoBanner">🧪 Demo Mode — this device has no real backend server, so "online" features simulate the experience locally instead of connecting to real players. Everything here saves and works, but matches, friends, and the leaderboard only reflect this device.</div>
-<div id="onlineStatusBig" class="onlineStatusPill">⚫ Offline</div>
-<div class="rankBadge" id="hubRankBadge" style="margin-left:8px">Bronze</div>
-<div class="scrollPage">
-<div class="hubGrid">
- <div class="hubCard" onclick="openMatchmaking()"><div class="icon">🎲</div>Find Match</div>
- <div class="hubCard" onclick="show('roomScreen');renderRoomScreen()"><div class="icon">🏠</div>Rooms</div>
- <div class="hubCard" onclick="show('friendsScreen');renderFriends()"><div class="icon">👥</div>Friends</div>
- <div class="hubCard" onclick="show('leaderboardScreen');renderLeaderboard()"><div class="icon">🏆</div>Leaderboard</div>
- <div class="hubCard" onclick="show('tournamentScreen');renderTournament()"><div class="icon">🎟️</div>Tournament</div>
- <div class="hubCard" onclick="show('rankedScreen');renderRanked()"><div class="icon">🥇</div>Ranked</div>
-</div>
-</div>
-<button onclick="show('games')">⬅ Back</button>
-</div></div>
-
-<div id="matchmakingScreen" class="screen"><div class="panel">
-<h1>🎲 Find Match</h1>
-<div style="margin:8px">Game: <select id="mmGameSelect"><option value="ttt">Tic Tac Toe</option><option value="pong">Pong</option><option value="rps">Rock Paper Scissors</option></select></div>
-<div id="mmStatus" style="margin:14px;font-size:16px">Press Search to begin</div>
-<div id="mmOpponentCard" style="display:none;margin:10px">
-  <div style="font-size:40px" id="mmOppAvatar">🤖</div>
-  <div id="mmOppName" style="font-weight:bold"></div>
-  <div id="mmOppRank"></div>
-</div>
-<button id="mmSearchBtn" onclick="startMatchmaking()">🎲 Find Match</button>
-<button id="mmCancelBtn" onclick="cancelMatchmaking()" style="display:none">✖ Cancel Search</button>
-<button onclick="show('onlineHub')">⬅ Back</button>
-</div></div>
-
-<div id="roomScreen" class="screen"><div class="panel">
-<h1>🏠 Private Room</h1>
-<div class="demoBanner">Room codes only work between browser tabs on this device in Demo Mode. A real cross-device room needs a backend server.</div>
-<div id="roomBody"></div>
-<button onclick="show('onlineHub')">⬅ Back</button>
-</div></div>
-
-<div id="friendsScreen" class="screen"><div class="panel">
-<h1>👥 Friends</h1>
-<div style="margin:8px"><input id="friendIdInput" class="pcInput" placeholder="Enter Player ID (e.g. XRD-XXXXXXXX)" style="max-width:280px;display:inline-block"><button onclick="addFriendById()">➕ Add</button></div>
-<div class="scrollPage" id="friendsList"></div>
-<button onclick="show('onlineHub')">⬅ Back</button>
-</div></div>
-
-<div id="liveMatchScreen" class="screen"><div class="panel">
-<h1 id="liveMatchTitle">⚔️ Live Match</h1>
-<div id="liveMatchStatus" style="margin:6px">Connecting...</div>
-<div id="liveMatchGameArea"></div>
-<div class="chatBox" id="matchChatBox"></div>
-<div class="quickMsgRow">
- <button onclick="sendQuickChat('Good Luck!')">Good Luck!</button>
- <button onclick="sendQuickChat('Nice Move!')">Nice Move!</button>
- <button onclick="sendQuickChat('GG')">GG</button>
- <button onclick="sendQuickChat('Well Played')">Well Played</button>
-</div>
-<div id="matchResultBox" style="display:none;margin:12px"></div>
-<button onclick="show('onlineHub')">🏠 Return Home</button>
-</div></div>
-
-<div id="leaderboardScreen" class="screen"><div class="panel">
-<h1>🏆 Leaderboard</h1>
-<div class="demoBanner">Local Leaderboard (Demo) — ranks only this device's stats; a real global leaderboard needs a backend server.</div>
-<div style="margin:6px"><select id="lbCategory" onchange="renderLeaderboard()">
- <option value="xp">Overall XP</option><option value="level">Highest Level</option><option value="remo">Most Remo</option>
- <option value="diamonds">Most Diamonds</option><option value="wins">Most Wins</option><option value="streak">Longest Win Streak</option>
-</select></div>
-<div class="scrollPage" id="lbBody"></div>
-<button onclick="show('onlineHub')">⬅ Back</button>
-</div></div>
-
-<div id="rankedScreen" class="screen"><div class="panel">
-<h1>🥇 Ranked Mode</h1>
-<div class="rankBadge" id="rankedBadgeBig">Bronze</div>
-<div id="rankedPoints" style="margin:10px"></div>
-<div class="xpBarOuter"><div class="xpBarInner" id="rankedProgressBar" style="width:0%"></div></div>
-<p style="font-size:13px;opacity:.8">Win Online matches to gain Rank Points. Lose to drop. Reach new tiers: Bronze → Silver → Gold → Platinum → Diamond → Master → Grandmaster.</p>
-<button onclick="show('onlineHub')">⬅ Back</button>
-</div></div>
-
-<div id="tournamentScreen" class="screen"><div class="panel">
-<h1>🎟️ Tournament</h1>
-<div class="demoBanner">Local single-device tournament — brackets are filled with simulated opponents.</div>
-<div id="tournamentSetup">
- <p>Choose a bracket size:</p>
- <button onclick="startTournament(8)">8 Players</button>
- <button onclick="startTournament(16)">16 Players</button>
- <button onclick="startTournament(32)">32 Players</button>
-</div>
-<div class="bracket" id="tournamentBracket"></div>
-<button onclick="show('onlineHub')">⬅ Back</button>
-</div></div>
-
 <div class="settingsOverlay" id="settingsOverlay">
  <div class="settingsBox popupAnim">
   <h2 style="margin-top:0">⚙️ Settings</h2>
@@ -798,7 +704,6 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 <div id="duel" class="screen"><div class="panel">
 <h1>🤖 AI Number Duel</h1>
 <button class="hudIconBtn" onclick="openGlobalSettings()" title="Settings" style="float:right">⚙️</button>
-<div id='duelLives' style='font-size:24px;margin:8px'>👤 ❤️❤️❤️ &nbsp; 🤖 ❤️❤️❤️</div>
 <p>Choose your secret number (1-100).</p>
 <input id='mySecret' type='number' min='1' max='100' value='50' style='padding:10px;font-size:20px;width:120px'>
 <br><button onclick="startDuel()">▶ Start Duel</button>
@@ -814,32 +719,23 @@ body.theme-golden #particleBg{background:radial-gradient(ellipse at 30% 20%,#3a2
 </div></div>
 
 <script>
-/* ===== AI Number Duel: true binary search + impossible-answer validation + working lives ===== */
-let aiNum=0,lo=1,hi=100,aig=50,ps=0,as=0,aiPending=false,mySecretNum=null,duelOver=false;
-let playerLives=3,aiLives=3;
-function updateLives(){const e=document.getElementById('duelLives');if(e)e.innerHTML='👤 '+'❤️'.repeat(Math.max(playerLives,0))+' &nbsp; 🤖 '+'❤️'.repeat(Math.max(aiLives,0));}
+/* ===== AI Number Duel: unlimited guesses + true binary search + answer validation ===== */
+let aiNum=0,lo=1,hi=100,aig=50,ps=0,as=0,aiPending=false,mySecretNum=null,duelOver=false,waitingForPlayerGuess=false;
 
 function startDuel(){
  const v=+mySecret.value;
  mySecretNum=(v>=1&&v<=100)?v:(Math.floor(Math.random()*100)+1);
  aiNum=Math.floor(Math.random()*100)+1;
  lo=1;hi=100;aig=Math.floor((lo+hi)/2);aiGuess.textContent=aig;
- aiPending=false;duelOver=false;
- playerLives=3;aiLives=3;updateLives();
+ aiPending=true;duelOver=false; waitingForPlayerGuess=false;
  duelPlay.style.display='block';history.innerHTML='';duelMsg.textContent='Game Started! Answer honestly about your secret number.';
  duelScore.textContent='👤'+ps+' : 🤖'+as;
 }
 function logm(s){history.innerHTML+='<div>'+s+'</div>';history.scrollTop=history.scrollHeight;}
 
-function endDuelIfOver(){
- if(playerLives<=0){duelOver=true;duelMsg.textContent='💀 You are out of lives! AI Wins the match.';return true;}
- if(aiLives<=0){duelOver=true;duelMsg.textContent='💀 AI is out of lives! You Win the match.';return true;}
- return false;
-}
-
 /* Player answers whether AI's guess (aig) is too low/high/correct vs their real secret (mySecretNum) - validated for honesty */
 function duelHigher(){
- if(duelOver||mySecretNum===null) return;
+ if(duelOver||mySecretNum===null||!aiPending) return;
  if(mySecretNum<=aig){
    showPopup('Impossible Answer','Please answer honestly.','error');
    return;
@@ -847,13 +743,11 @@ function duelHigher(){
  logm('AI:'+aig+' ↑');
  lo=aig+1;
  aiPending=true;
- aiLives--; updateLives();
- if(endDuelIfOver()) return;
+ waitingForPlayerGuess=true;
  duelMsg.textContent='👤 Your Turn! Guess the AI number.';
- advanceAIGuess();
 }
 function duelLower(){
- if(duelOver||mySecretNum===null) return;
+ if(duelOver||mySecretNum===null||!aiPending) return;
  if(mySecretNum>=aig){
    showPopup('Impossible Answer','Please answer honestly.','error');
    return;
@@ -861,13 +755,11 @@ function duelLower(){
  logm('AI:'+aig+' ↓');
  hi=aig-1;
  aiPending=true;
- aiLives--; updateLives();
- if(endDuelIfOver()) return;
+ waitingForPlayerGuess=true;
  duelMsg.textContent='👤 Your Turn! Guess the AI number.';
- advanceAIGuess();
 }
 function duelCorrect(){
- if(duelOver||mySecretNum===null) return;
+ if(duelOver||mySecretNum===null||!aiPending) return;
  if(aig!==mySecretNum){
    showPopup('Impossible Answer','That is not your secret number.','error');
    return;
@@ -885,16 +777,18 @@ function advanceAIGuess(){
  setTimeout(()=>{
    aig=Math.floor((lo+hi)/2);
    aiGuess.textContent=aig;
-   duelMsg.textContent='🤖 AI guessed '+aig;
-   aiPending=false;
+   duelMsg.textContent='🤖 AI guessed '+aig+' — your turn!';
+   aiPending=true;
  },800);
 }
 
 function checkYourGuess(){
- if(duelOver) return;
+ if(duelOver||!waitingForPlayerGuess) return;
  let g=+yourGuess.value;
+ if(!Number.isInteger(g)||g<1||g>100) return;
  logm('You:'+g);
  if(typeof markGamePlayed==='function') markGamePlayed('duel');
+ waitingForPlayerGuess=false;
  if(g===aiNum){
    ps++;
    duelScore.textContent='👤'+ps+' : 🤖'+as;
@@ -904,9 +798,8 @@ function checkYourGuess(){
    duelOver=true;
    return;
  }
- playerLives--; updateLives();
- if(endDuelIfOver()) return;
- duelMsg.textContent=(g<aiNum?'Higher! ':'Lower! ')+'Guess again.';
+ duelMsg.textContent=(g<aiNum?'Higher! ':'Lower! ')+'AI is thinking...';
+ setTimeout(()=>{ if(!duelOver) advanceAIGuess(); },800);
 }
 </script>
 
@@ -1136,26 +1029,14 @@ function check(p){
    status.textContent=p+' WINS!';
    celebrate();
    onTTTGameEnd(p);
-   if(typeof window.__tournament!=='undefined' && window.__tournament){
-     setTimeout(()=>advanceTournament(p==='X'),1600);
-   } else if(typeof onlineMatchActive!=='undefined' && onlineMatchActive){
-     setTimeout(()=>finishOnlineMatch(p==='X'),1600);
-   } else {
-     setTimeout(resetGame,2000);
-   }
+   setTimeout(resetGame,2000);
    return true;
  }
  if(!board.includes('')){
    over=true;dw++;dwEl.textContent=dw;status.textContent='DRAW';
    addRemo(7);
    onTTTGameEnd(null);
-   if(typeof window.__tournament!=='undefined' && window.__tournament){
-     setTimeout(()=>advanceTournament(false),1600);
-   } else if(typeof onlineMatchActive!=='undefined' && onlineMatchActive){
-     setTimeout(()=>finishOnlineMatch(false),1600);
-   } else {
-     setTimeout(resetGame,2000);
-   }
+   setTimeout(resetGame,2000);
    return true;
  }
  return false;
@@ -1225,7 +1106,6 @@ function toggleRPSSettings(){
 function playRPS(choice){
   if(rpsRoundActive) return; // ignore taps while a round is already animating
   rpsRoundActive=true;
-  if(typeof pauseStarfield==='function') pauseStarfield();
   document.querySelectorAll('.rpsChoiceBtn').forEach(b=>b.disabled=true);
 
   const opts=['Rock','Paper','Scissors'];
@@ -1276,15 +1156,10 @@ function playRPS(choice){
     resultEl.textContent=result;
     document.getElementById('rpsScore').textContent='🧑 You:'+rpsYou+' | 🤖 AI:'+rpsAI;
     if(typeof markGamePlayed==='function') markGamePlayed('rps');
-
-    if(typeof onlineMatchActive!=='undefined' && onlineMatchActive){
-      setTimeout(()=>finishOnlineMatch(result==='🏆 YOU WIN'),1500);
-    }
-    // Keep the result visible for 3 seconds, then reset automatically.
-    setTimeout(()=>{
-      resetRPS();
-    },3000);
-  },1200);
+    // No automatic reset here. Keep both emojis visible.
+    rpsRoundActive=false;
+    document.querySelectorAll('.rpsChoiceBtn').forEach(b=>b.disabled=false);
+  },2000);
 }
 function resetRPS(){
   const p=document.getElementById('playerPick'),a=document.getElementById('aiPick');
@@ -1293,7 +1168,6 @@ function resetRPS(){
   document.getElementById('rpsResult').textContent='';
   document.getElementById('centerLine').style.display='block';
   rpsRoundActive=false;
-  if(typeof resumeStarfield==='function') resumeStarfield();
   document.querySelectorAll('.rpsChoiceBtn').forEach(b=>b.disabled=false);
 }
 
@@ -2092,9 +1966,6 @@ function declareWinner(n){
    const r=c.getBoundingClientRect();
    confettiBurst(r.left+r.width/2,r.top+r.height/2);
  }
- if(typeof onlineMatchActive!=='undefined' && onlineMatchActive && onlineMatchActive.game==='pong'){
-   setTimeout(()=>{ if(typeof finishOnlineMatch==='function') finishOnlineMatch(true); },400);
- }
 }
 
 function scorePoint(scorer){
@@ -2864,9 +2735,9 @@ function handleWin(){
 // only runs if those functions exist, so this file still works completely
 // standalone if ever opened on its own.
 function awardCollectionRewards(modeId,newRecord){
-  const remoMap={easy:3,classic:5,hard:8,expert:12,timeattack:8,movechallenge:8,daily:6};
-  let remo=remoMap[modeId]||4;
-  if(newRecord) remo+=3;
+  const remoMap={easy:6,classic:12,hard:20,expert:30,timeattack:18,movechallenge:18,daily:10};
+  let remo=remoMap[modeId]||8;
+  if(newRecord) remo+=5;
   if(typeof addRemo==='function') addRemo(remo);
   if(typeof markGamePlayed==='function') markGamePlayed('nslide');
   if(typeof checkDiamondMilestones==='function') checkDiamondMilestones();
@@ -3121,16 +2992,6 @@ function getOverallBestAcrossAll(){
   });
   return {bestTime,bestMoves,totalGames,gamesWon};
 }
-/* One-time requested +100 coin bonus */
-(function(){
-  if(localStorage.getItem('xarcadeStartingBonus100')!=='1'){
-    if(typeof SAVE==='object' && SAVE){
-      SAVE.coins = Number(SAVE.coins||0) + 100;
-      localStorage.setItem('xarcadeStartingBonus100','1');
-      if(typeof saveGame==='function') saveGame();
-    }
-  }
-})();
 function renderHome(){
   const o=getOverallBestAcrossAll();
   document.getElementById('ns-qsBestTime').textContent=o.bestTime!=null?formatTime(o.bestTime):'--:--';
@@ -3405,7 +3266,8 @@ let memDifficulty=localStorage.getItem('memDifficulty')||'medium';
 const MEM_DIFF_PAIRS={easy:6,medium:10,hard:14};
 let MEM_PAIRS=MEM_DIFF_PAIRS[memDifficulty]||10;
 const MEM_SYMBOLS=['😀','🚀','⭐','👾','🤖','💎','🔥','🎮','🛸','🎯','🎲','🧩','🍀','⚡'];
-const MEM_REMO_REWARD={easy:2,medium:5,hard:10};
+const MEM_REMO_REWARD={easy:7,medium:14};
+const MEM_HARD_JACKPOT_MOVES=35, MEM_HARD_JACKPOT_REMO=30, MEM_HARD_NORMAL_REMO=20;
 const MEM_PERFECT_BONUS=15;
 
 function updateMemDiffUI(){
@@ -3495,10 +3357,18 @@ function flip(btn,i){
        }
        if(best==='-'||memTimer<parseInt(best)){localStorage.memBest=memTimer;best=memTimer;const be=document.getElementById('mb');if(be)be.textContent=memTimer;}
        memoryWins++;
-       let memRemo=MEM_REMO_REWARD[memDifficulty]||0;
+       let memRemo;
+       if(memDifficulty==='hard'){
+         memRemo = (memMoves<MEM_HARD_JACKPOT_MOVES) ? MEM_HARD_JACKPOT_REMO : MEM_HARD_NORMAL_REMO;
+       } else {
+         memRemo = MEM_REMO_REWARD[memDifficulty]||0;
+       }
        const perfect=memMoves===MEM_PAIRS*2;
        if(perfect) memRemo+=MEM_PERFECT_BONUS;
        if(memRemo>0 && typeof addRemo==='function') addRemo(memRemo);
+       if(memDifficulty==='hard' && memMoves<MEM_HARD_JACKPOT_MOVES && !perfect){
+         showPopup('Jackpot!','🎰 Finished in under 35 moves! +'+MEM_HARD_JACKPOT_REMO+' bonus Remo','success');
+       }
        if(perfect) showPopup('Perfect Game!','🎯 No mistakes! +'+MEM_PERFECT_BONUS+' bonus Remo','success');
        if(memoryWins-memHintAwardCheckpoint>=2){
          memHintAwardCheckpoint+=2;
@@ -3790,6 +3660,7 @@ function onDuelWin(){
  s.totalGamesPlayed=(s.totalGamesPlayed||0)+1;
  saveStats(s);
  bumpTask('duelWin2',1);
+ if(typeof addRemo==='function') addRemo(12);
  checkDiamondMilestones();
 }
 
@@ -3828,7 +3699,6 @@ addDiamonds(0);
 /* ===== Shop (reuses Remo) ===== */
 const SHOP_ITEMS=[
  {id:'buyHint',icon:'💡',name:'+1 Hint',cost:20,type:'consumable',effect:()=>{hintCount++;updateHintUI();}},
- {id:'extraLife',icon:'❤️',name:'Extra Life',cost:50,type:'consumable',effect:()=>{playerLives++;updateLives();}},
  {id:'retryToken',icon:'🎲',name:'Retry Token',cost:75,type:'stackable'},
  {id:'slowAI',icon:'⏱',name:'Slow AI',cost:100,type:'stackable'},
  {id:'mysteryChestItem',icon:'🎁',name:'Mystery Chest',cost:150,type:'nav',effect:()=>{renderChest();show('chest');}},
@@ -4306,7 +4176,7 @@ const SPIN_REWARDS=[
  {label:'💎 +100 Diamonds',type:'diamond',amount:100},
  {label:'💎 +250 Diamonds (RARE)',type:'diamond',amount:250,rare:true},
  {label:'🏅 Random Badge Progress',type:'badgeBoost'},
- {label:'+100 Remo',type:'remo',amount:100},
+ {label:'🎁 Mystery Chest',type:'chestNav'},
  {label:'🎉 JACKPOT +1000 Remo',type:'jackpot',amount:1000}
 ];
 function pickSpinReward(){
@@ -4659,7 +4529,6 @@ function renderInventory(){
  const pw=(typeof loadPowerups==='function')?loadPowerups():{};
  const items=[
    {icon:'💡',name:'Hints (Memory)',qty:(typeof hintCount!=='undefined')?hintCount:0},
-   {icon:'❤️',name:'Duel Lives Bought',qty:inv.extraLife||0},
    {icon:'🎲',name:'Retry Tokens',qty:inv.retryToken||0},
    {icon:'⏱',name:'Slow AI',qty:inv.slowAI||0},
    {icon:'✨',name:'Double TTT Reward',qty:pw.doubleTTT?1:0},
@@ -4731,77 +4600,154 @@ document.addEventListener('DOMContentLoaded',syncHudBar);
 /* ================= PROFILE CREATION & USERNAME SYSTEM ================= */
 const AVATAR_OPTIONS=['🤖','🥷','👽','🧑‍🚀','🦸','🧙','🐱','🐺','🦊','🐉'];
 const FRAME_OPTIONS=[{id:'default',icon:'⚪',name:'Default'},{id:'neon',icon:'🔵',name:'Neon'},{id:'gold',icon:'🟡',name:'Gold'}];
+const ID_PIC_OPTIONS=['🤖','🥷','👽','🧑‍🚀','🦸','🧙','🐱','🐺','🦊','🐉','👾','🎮'];
 const RESERVED_NAMES=['admin','administrator','owner','system','moderator','support','chatgpt'];
-let __pcSelectedAvatar='🤖',__pcSelectedFrame='default',__pcGender='Male';
+let __pcSelectedAvatar='🤖',__pcSelectedFrame='default',__pcSelectedIdPic='🤖';
 
-function loadPlayerProfile(){try{return JSON.parse(localStorage.getItem('playerProfile'));}catch(e){return null;}}
+function loadPlayerProfile(){
+  try{
+    const p=JSON.parse(localStorage.getItem('playerProfile'));
+    return ensureUniqueCode(ensureLatestPlayerId(p));
+  }catch(e){return null;}
+}
 function savePlayerProfile(p){localStorage.setItem('playerProfile',JSON.stringify(p));}
 
+/* ===== NEW XARCADE PLAYER ID SYSTEM ===== */
 function generatePlayerId(){
- const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
- let id='XRD-';
- for(let i=0;i<8;i++) id+=chars[Math.floor(Math.random()*chars.length)];
- return id;
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let id='XARC-';
+  for(let i=0;i<4;i++) id+=chars[Math.floor(Math.random()*chars.length)];
+  id+='-';
+  for(let i=0;i<4;i++) id+=chars[Math.floor(Math.random()*chars.length)];
+  return id;
+}
+
+function generateUniqueCode(){
+ const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+ let code='XARC-';
+ for(let i=0;i<8;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+ return code;
+}
+
+function ensureUniqueCode(p){
+ if(!p) return p;
+ if(!p.uniqueCode || !/^XARC-[A-Z0-9]{8}$/i.test(p.uniqueCode)){
+   p.uniqueCode=generateUniqueCode();
+   savePlayerProfile(p);
+ }
+ const d=getReferralData();
+ if(!d[p.uniqueCode]){d[p.uniqueCode]={count:0,remo:0,diamonds:0,owner:p.username||'Player'};saveReferralData(d);}
+ return p;
+}
+
+function openCodePanel(){
+ const p=ensureUniqueCode(loadPlayerProfile());
+ if(!p) return;
+ document.getElementById('myUniqueCode').textContent=p.uniqueCode;
+ document.getElementById('enterCodeInput').value='';
+ clearCodeMessage();
+ document.getElementById('codeOverlay').classList.add('open');
+ refreshReferralCount();
+}
+function closeCodePanel(){document.getElementById('codeOverlay').classList.remove('open');}
+function clearCodeMessage(){const e=document.getElementById('codeMsg');if(e){e.textContent='';e.className='codeMsg';}}
+function copyMyCode(){
+ const p=ensureUniqueCode(loadPlayerProfile());
+ if(!p) return;
+ const done=()=>{const e=document.getElementById('codeMsg');if(e){e.textContent='✅ Code copied';e.className='codeMsg ok';}};
+ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(p.uniqueCode).then(done).catch(done); else done();
+}
+function getReferralData(){try{return JSON.parse(localStorage.getItem('xarcadeReferralData'))||{};}catch(e){return {};}}
+function saveReferralData(d){localStorage.setItem('xarcadeReferralData',JSON.stringify(d));}
+function refreshReferralCount(){const p=ensureUniqueCode(loadPlayerProfile());const d=getReferralData();const count=p&&d[p.uniqueCode]?Math.min(27,d[p.uniqueCode].count||0):0;const el=document.getElementById('referralCount');if(el)el.textContent=count;}
+function applyCode(){
+ const input=document.getElementById('enterCodeInput'),msg=document.getElementById('codeMsg');
+ const code=(input.value||'').trim().toUpperCase();
+ if(!/^XARC-[A-Z0-9]{8}$/.test(code)){msg.textContent='❌ Enter a valid XARC code.';msg.className='codeMsg err';return;}
+ const p=ensureUniqueCode(loadPlayerProfile());
+ if(!p){msg.textContent='❌ Create an ID first.';msg.className='codeMsg err';return;}
+ if(code===p.uniqueCode){msg.textContent='❌ You cannot enter your own code.';msg.className='codeMsg err';return;}
+ const applied=JSON.parse(localStorage.getItem('xarcadeAppliedCodes')||'[]');
+ if(applied.includes(code)){msg.textContent='❌ You already applied this code.';msg.className='codeMsg err';return;}
+ const data=getReferralData();
+ const entry=data[code];
+ if(entry&&(entry.count||0)>=27){msg.textContent='❌ This code has reached 27 referrals.';msg.className='codeMsg err';return;}
+ addRemo(50);addDiamonds(5);
+ if(entry){entry.count=(entry.count||0)+1;entry.remo=(entry.remo||0)+30;entry.diamonds=(entry.diamonds||0)+1;}
+ else data[code]={count:1,remo:30,diamonds:1,owner:'unknown'};
+ saveReferralData(data);
+ applied.push(code);localStorage.setItem('xarcadeAppliedCodes',JSON.stringify(applied));localStorage.setItem('appliedXArcadeCode',code);
+ msg.textContent='✅ Code applied! You got 🪙 50 + 💎 5.';msg.className='codeMsg ok';refreshReferralCount();
+}
+
+function ensureLatestPlayerId(p){
+  if(!p) return p;
+  // Upgrade profiles created with the old XRD-XXXXXXXX ID format.
+  if(!p.playerId || /^XRD-[A-Z0-9]{8}$/i.test(p.playerId)){
+    p.playerId=generatePlayerId();
+    savePlayerProfile(p);
+  }
+  return p;
 }
 
 function renderAvatarPicker(){
  const row=document.getElementById('pcAvatarRow');
- row.innerHTML=AVATAR_OPTIONS.map(a=>'<div class="pcAvatarOpt'+(a===__pcSelectedAvatar?' selected':'')+'" onclick="selectPcAvatar(\''+a+'\')">'+a+'</div>').join('');
+ if(row) row.innerHTML=AVATAR_OPTIONS.map(a=>'<div class="pcAvatarOpt'+(a===__pcSelectedAvatar?' selected':'')+'" onclick="selectPcAvatar(\''+a+'\')">'+a+'</div>').join('');
  const frow=document.getElementById('pcFrameRow');
- if(frow) frow.innerHTML='';
+ if(frow) frow.innerHTML=FRAME_OPTIONS.map(f=>'<div class="pcAvatarOpt'+(f.id===__pcSelectedFrame?' selected':'')+'" onclick="selectPcFrame(\''+f.id+'\')" title="'+f.name+'">'+f.icon+'</div>').join('');
+ const prow=document.getElementById('pcIdPicRow');
+ if(prow) prow.innerHTML=ID_PIC_OPTIONS.map((pic,i)=>'<div class="pcIdPicOpt'+(pic===__pcSelectedIdPic?' selected':'')+'" onclick="selectPcIdPic(\''+pic+'\')" title="ID Picture '+(i+1)+'">'+pic+'</div>').join('');
 }
 function selectPcAvatar(a){__pcSelectedAvatar=a;renderAvatarPicker();}
 function selectPcFrame(f){__pcSelectedFrame=f;renderAvatarPicker();}
-function selectGender(g){
- __pcGender=g;
- document.getElementById('genderMale').classList.toggle('selected',g==='Male');
- document.getElementById('genderFemale').classList.toggle('selected',g==='Female');
-}
-function selectPcAvatar(a){__pcSelectedAvatar=a;renderAvatarPicker();}
-function selectPcFrame(f){__pcSelectedFrame=f;renderAvatarPicker();}
+function selectPcIdPic(pic){__pcSelectedIdPic=pic;const msg=document.getElementById('pcIdPicMsg');if(msg)msg.textContent='✅ ID picture selected';renderAvatarPicker();validateProfileForm();}
 
-function validateUsername(){
- const raw=document.getElementById('pcUsername').value;
- const name=raw.trim();
- document.getElementById('pcUsername').value=name;
- const msg=document.getElementById('pcUsernameMsg');
+function validateProfileForm(){
+ const username=(document.getElementById('pcUsername').value||'').trim();
+ const password=document.getElementById('pcPassword').value||'';
+ const birth=document.getElementById('pcBirthDate').value||'';
+ const terms=document.getElementById('pcTerms').checked;
+ const um=document.getElementById('pcUsernameMsg');
+ const pm=document.getElementById('pcPasswordMsg');
+ const bm=document.getElementById('pcBirthMsg');
+ let userOK=true, passOK=true, birthOK=true;
+ if(!username){um.textContent='';userOK=false;}
+ else if(username.length<3||username.length>16){um.textContent='❌ Must be 3-16 characters.';um.className='pcMsg err';userOK=false;}
+ else if(!/^[A-Za-z0-9_]+$/.test(username)){um.textContent='❌ Letters, numbers and _ only.';um.className='pcMsg err';userOK=false;}
+ else if(RESERVED_NAMES.includes(username.toLowerCase())){um.textContent='❌ Username is reserved.';um.className='pcMsg err';userOK=false;}
+ else {um.textContent='✅ Username available!';um.className='pcMsg ok';}
+ if(!password){pm.textContent='';passOK=false;}
+ else if(password.length<6||password.length>16){pm.textContent='❌ Must be 6-16 characters.';pm.className='pcMsg err';passOK=false;}
+ else {pm.textContent='✅ Password accepted.';pm.className='pcMsg ok';}
+ if(!birth){bm.textContent='';birthOK=false;}
+ else {bm.textContent='✅ Valid birth date.';bm.className='pcMsg ok';}
  const btn=document.getElementById('pcContinueBtn');
- let ok=true,text='';
- if(name.length===0){ok=false;text='';}
- else if(name.length<3||name.length>20){ok=false;text='❌ Must be 3-20 characters.';}
- else if(!/^[A-Za-z0-9_]+$/.test(name)){ok=false;text='❌ Only letters, numbers, and _ are allowed.';}
- else if(RESERVED_NAMES.includes(name.toLowerCase())){ok=false;text='❌ Username already taken. Please choose another username.';}
- else {text='✅ Username available!';}
- msg.textContent=text;
- msg.className='pcMsg '+(ok&&text?'ok':(text?'err':''));
- const pass=(document.getElementById('pcPassword')||{}).value||'';
- const dob=(document.getElementById('pcBirthDate')||{}).value||'';
- const pLen=pass.length>=8&&pass.length<=20;
- const pUpper=/[A-Z]/.test(pass);
- const pLower=/[a-z]/.test(pass);
- const pNum=/[0-9]/.test(pass);
- const setRule=(id,good)=>{const e=document.getElementById(id);if(e){e.classList.toggle('ok',good);e.textContent=(good?'✓ ':'✕ ')+e.textContent.replace(/^[✓✕] /,'');}};
- setRule('pwLen',pLen); setRule('pwUpper',pUpper); setRule('pwLower',pLower); setRule('pwNum',pNum);
- btn.disabled=!ok||name.length===0||!pLen||!pUpper||!pLower||!pNum||!dob;
- btn.style.opacity=btn.disabled?'.5':'1';
+ const ok=userOK&&passOK&&birthOK&&!!__pcSelectedIdPic&&terms;
+ btn.disabled=!ok;
+ btn.style.opacity=ok?'1':'.45';
 }
+function validateUsername(){validateProfileForm();}
 
 function finishProfileCreation(){
+ validateProfileForm();
  const username=document.getElementById('pcUsername').value.trim();
- if(username.length<3) return;
  const password=document.getElementById('pcPassword').value;
  const birthDate=document.getElementById('pcBirthDate').value;
- if(password.length<8 || password.length>20 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !birthDate) return;
+ const gender=document.getElementById('pcGender').value;
+ const terms=document.getElementById('pcTerms').checked;
+ if(!username||username.length<3||username.length>16||!/^[A-Za-z0-9_]+$/.test(username)||password.length<6||password.length>16||!birthDate||!__pcSelectedIdPic||!terms) return;
  const profile={
    username,
    displayName:username,
    country:'',
    password,
    birthDate,
-   gender:__pcGender,
+   gender,
    avatar:__pcSelectedAvatar,
    frame:__pcSelectedFrame,
+   idPic:__pcSelectedIdPic,
    playerId:generatePlayerId(),
+   uniqueCode:generateUniqueCode(),
    createdAt:Date.now()
  };
  savePlayerProfile(profile);
@@ -4812,7 +4758,7 @@ function finishProfileCreation(){
 function enterDashboard(){
  const p=loadPlayerProfile();
  const nameEl=document.getElementById('hudAvatarIcon');
- if(nameEl && p) nameEl.textContent=p.avatar;
+ if(nameEl && p) nameEl.textContent=p.idPic||p.avatar||'🤖';
  show('games');
 }
 
@@ -4823,7 +4769,7 @@ function checkFirstLaunch(){
    renderAvatarPicker();
  } else {
    document.getElementById('loadWelcome').classList.add('open');
-   document.getElementById('welcomeAvatar').textContent=p.avatar;
+   document.getElementById('welcomeAvatar').textContent=p.idPic||p.avatar||'🤖';
    document.getElementById('welcomeName').textContent=p.displayName||p.username;
    const lvl=(typeof getLevel==='function')?getLevel():{level:1,into:0};
    document.getElementById('welcomeLevel').textContent='⭐ Level '+lvl.level;
@@ -4834,260 +4780,10 @@ function checkFirstLaunch(){
    },1400);
  }
 }
-
-document.addEventListener('input',function(e){
- if(e.target && (e.target.id==='pcPassword'||e.target.id==='pcBirthDate')) validateUsername();
-});
 document.addEventListener('DOMContentLoaded',checkFirstLaunch);
 </script>
 
-<script>
-/* ================= ONLINE HUB (Demo Mode - local simulation, no real backend) ================= */
-const RANKS=[{name:'Bronze',min:0},{name:'Silver',min:200},{name:'Gold',min:500},{name:'Platinum',min:900},{name:'Diamond',min:1400},{name:'Master',min:2000},{name:'Grandmaster',min:2800}];
-const BOT_NAMES=['NovaStrike','PixelFox','QuantumJin','ShadowByte','LunarWisp','CyberFrost','VoidRunner','EchoPulse','NeonDrift','ZeroPing'];
 
-function loadOnlineStats(){try{return JSON.parse(localStorage.getItem('onlineStats'))||{rankPoints:0,wins:0,losses:0};}catch(e){return {rankPoints:0,wins:0,losses:0};}}
-function saveOnlineStats(o){localStorage.setItem('onlineStats',JSON.stringify(o));}
-function getRank(points){let r=RANKS[0];for(const rk of RANKS) if(points>=rk.min) r=rk; return r;}
-
-function showToast(msg){
- const wrap=document.getElementById('toastWrap');
- if(!wrap) return;
- const t=document.createElement('div');
- t.className='toast';
- t.textContent=msg;
- wrap.appendChild(t);
- setTimeout(()=>t.remove(),4000);
-}
-
-function updateOnlineStatus(){
- const online=navigator.onLine;
- const big=document.getElementById('onlineStatusBig');
- const card=document.getElementById('onlineCardStatus');
- if(big) big.textContent=online?'🟢 Online':'⚫ Offline Mode';
- if(card) card.textContent=online?'🟢 Online (Demo)':'⚫ Offline Mode';
- const o=loadOnlineStats();
- const rankEl=document.getElementById('hubRankBadge');
- if(rankEl){const r=getRank(o.rankPoints);rankEl.textContent=r.name;rankEl.className='rankBadge rank-'+r.name;}
-}
-window.addEventListener('online',updateOnlineStatus);
-window.addEventListener('offline',updateOnlineStatus);
-document.addEventListener('DOMContentLoaded',updateOnlineStatus);
-
-function renderOnlineHub(){updateOnlineStatus();}
-
-/* ---- Matchmaking (simulated opponent, reuses real existing game engines) ---- */
-let __mmTimer=null;
-function openMatchmaking(){show('matchmakingScreen');document.getElementById('mmStatus').textContent='Press Search to begin';document.getElementById('mmOpponentCard').style.display='none';document.getElementById('mmCancelBtn').style.display='none';document.getElementById('mmSearchBtn').style.display='';}
-function startMatchmaking(){
- if(!navigator.onLine){showPopup('Offline','You are offline. Connect to the internet to search for a match (Demo Mode still simulates offline).','warning');}
- document.getElementById('mmSearchBtn').style.display='none';
- document.getElementById('mmCancelBtn').style.display='';
- document.getElementById('mmStatus').textContent='🔍 Searching for Players... (est. wait: 3s)';
- __mmTimer=setTimeout(()=>{
-   const name=BOT_NAMES[Math.floor(Math.random()*BOT_NAMES.length)];
-   const o=loadOnlineStats();
-   const rank=getRank(o.rankPoints+ (Math.random()<0.5?-100:100));
-   document.getElementById('mmOppAvatar').textContent=AVATAR_OPTIONS[Math.floor(Math.random()*AVATAR_OPTIONS.length)];
-   document.getElementById('mmOppName').textContent=name+' (Simulated)';
-   document.getElementById('mmOppRank').innerHTML='<span class="rankBadge rank-'+rank.name+'">'+rank.name+'</span>';
-   document.getElementById('mmOpponentCard').style.display='block';
-   document.getElementById('mmStatus').textContent='✅ Match Found!';
-   document.getElementById('mmCancelBtn').style.display='none';
-   const g=document.getElementById('mmGameSelect').value;
-   setTimeout(()=>beginOnlineMatch(g,name),1200);
- },3000);
-}
-function cancelMatchmaking(){clearTimeout(__mmTimer);document.getElementById('mmStatus').textContent='Search cancelled.';document.getElementById('mmSearchBtn').style.display='';document.getElementById('mmCancelBtn').style.display='none';}
-
-let onlineMatchActive=null;
-function beginOnlineMatch(gameKey,opponentName){
- onlineMatchActive={game:gameKey,opponent:opponentName,startedAt:Date.now()};
- showToast('⚔️ Match found vs '+opponentName);
- if(gameKey==='ttt'){startAI('hard');}
- else if(gameKey==='pong'){setPongMode('ai');show('pong');}
- else if(gameKey==='rps'){show('rps');}
-}
-
-function finishOnlineMatch(didWin){
- if(!onlineMatchActive) return;
- const o=loadOnlineStats();
- const change=didWin?(25+Math.floor(Math.random()*15)):-(15+Math.floor(Math.random()*10));
- const prevRank=getRank(o.rankPoints);
- o.rankPoints=Math.max(0,o.rankPoints+change);
- if(didWin) o.wins=(o.wins||0)+1; else o.losses=(o.losses||0)+1;
- saveOnlineStats(o);
- const newRank=getRank(o.rankPoints);
- const xpGain=didWin?30:10, remoGain=didWin?15:5, diamondGain=didWin?2:0;
- if(typeof addRemo==='function') addRemo(remoGain);
- if(typeof addDiamonds==='function' && diamondGain) addDiamonds(diamondGain);
- if(newRank.name!==prevRank.name) showToast('🏅 Rank Up! You are now '+newRank.name);
- const opp=onlineMatchActive.opponent;
- onlineMatchActive=null;
- showPopup(
-   didWin?'🏆 Victory!':'💀 Defeat',
-   (didWin?'You defeated ':'You lost to ')+opp+'!\nXP +'+xpGain+' | Remo +'+remoGain+' | Diamonds +'+diamondGain+'\nRank Points: '+change+' ('+newRank.name+')',
-   didWin?'success':'error'
- );
- show('onlineHub');
- renderOnlineHub();
-}
-
-/* ---- Private Rooms (real, works across browser tabs on this device via localStorage) ---- */
-function loadRooms(){try{return JSON.parse(localStorage.getItem('onlineRooms'))||{};}catch(e){return {};}}
-function saveRooms(r){localStorage.setItem('onlineRooms',JSON.stringify(r));}
-function genRoomCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';for(let i=0;i<6;i++)c+=chars[Math.floor(Math.random()*chars.length)];return c;}
-
-function renderRoomScreen(){
- const body=document.getElementById('roomBody');
- const p=loadPlayerProfile();
- body.innerHTML='<button onclick="createRoom()">🔑 Create Room</button><br>'+
-   '<input class="pcInput" id="joinRoomInput" placeholder="Enter 6-character room code" style="max-width:220px;text-transform:uppercase">'+
-   '<button onclick="joinRoom()">Join</button><div id="roomActiveBox"></div>';
-}
-function createRoom(){
- const rooms=loadRooms();
- const code=genRoomCode();
- const p=loadPlayerProfile();
- rooms[code]={owner:p?p.username:'Player',players:[p?p.username:'Player'],game:'ttt',started:false,createdAt:Date.now()};
- saveRooms(rooms);
- showRoomActive(code,true);
-}
-function joinRoom(){
- const code=document.getElementById('joinRoomInput').value.trim().toUpperCase();
- const rooms=loadRooms();
- if(!rooms[code]){showPopup('Room Not Found','Make sure the code is correct and the host has the room open in another tab on this device.','error');return;}
- const p=loadPlayerProfile();
- if(!rooms[code].players.includes(p?p.username:'Player')) rooms[code].players.push(p?p.username:'Player');
- saveRooms(rooms);
- showRoomActive(code,false);
-}
-function showRoomActive(code,isOwner){
- const rooms=loadRooms();
- const room=rooms[code];
- const box=document.getElementById('roomActiveBox');
- box.innerHTML='<h3>Room: '+code+'</h3><p>Share this code with a friend on another tab of this device.</p>'+
-   '<p>Players: '+room.players.join(', ')+'</p>'+
-   '<div>Game: <select onchange="setRoomGame(\''+code+'\',this.value)"><option value="ttt">Tic Tac Toe</option><option value="pong">Pong</option><option value="rps">Rock Paper Scissors</option></select></div>'+
-   (isOwner?'<button onclick="startRoomMatch(\''+code+'\')">▶ Start Match</button>':'<p>Waiting for host to start...</p>')+
-   '<button onclick="leaveRoom(\''+code+'\')">🚪 Leave Room</button>';
-}
-function setRoomGame(code,g){const rooms=loadRooms();if(rooms[code]){rooms[code].game=g;saveRooms(rooms);}}
-function startRoomMatch(code){
- const rooms=loadRooms();
- if(!rooms[code]) return;
- rooms[code].started=true;
- saveRooms(rooms);
- beginOnlineMatch(rooms[code].game,rooms[code].players.find(pl=>pl!==(loadPlayerProfile()||{}).username)||'Room Opponent');
-}
-function leaveRoom(code){const rooms=loadRooms();delete rooms[code];saveRooms(rooms);show('onlineHub');}
-window.addEventListener('storage',e=>{
- if(e.key==='onlineRooms'){
-   const box=document.getElementById('roomActiveBox');
-   if(box && box.innerHTML) { /* room state changed in another tab - pick up on next interaction */ }
- }
-});
-
-/* ---- Friends (local list; cannot verify real players without a backend) ---- */
-function loadFriends(){try{return JSON.parse(localStorage.getItem('onlineFriends'))||[];}catch(e){return [];}}
-function saveFriends(f){localStorage.setItem('onlineFriends',JSON.stringify(f));}
-function addFriendById(){
- const id=document.getElementById('friendIdInput').value.trim();
- if(!id){return;}
- const friends=loadFriends();
- if(friends.find(f=>f.id===id)){showPopup('Already Added','This player is already on your friends list.','info');return;}
- friends.push({id,name:'Player-'+id.slice(-4),status:'offline'});
- saveFriends(friends);
- showToast('👥 Friend added');
- renderFriends();
-}
-function removeFriend(id){let friends=loadFriends();friends=friends.filter(f=>f.id!==id);saveFriends(friends);renderFriends();}
-function renderFriends(){
- const list=document.getElementById('friendsList');
- const friends=loadFriends();
- if(!friends.length){list.innerHTML='<p style="opacity:.7">No friends added yet. Demo Mode can\'t verify real Player IDs since there\'s no backend — this is a local list only.</p>';return;}
- list.innerHTML=friends.map(f=>'<div class="taskCard">⚫ Offline &nbsp; <b>'+f.name+'</b> ('+f.id+')<br><button onclick="removeFriend(\''+f.id+'\')">Remove</button></div>').join('');
-}
-
-/* ---- Leaderboard (local only; a few clearly-labeled simulated rows for texture) ---- */
-function renderLeaderboard(){
- const body=document.getElementById('lbBody');
- const cat=document.getElementById('lbCategory').value;
- const s=(typeof loadStats==='function')?loadStats():{};
- const lvl=(typeof getLevel==='function')?getLevel():{level:1,xp:0};
- const p=loadPlayerProfile();
- const myVal={xp:lvl.xp,level:lvl.level,remo:(typeof remo!=='undefined'?remo:0),diamonds:(typeof diamonds!=='undefined'?diamonds:0),wins:(s.tttTotalWins||0)+(s.rpsWins||0)+(s.duelWins||0),streak:s.longestStreak||0}[cat];
- const rows=[{name:(p?p.displayName:'You'),val:myVal,me:true}];
- BOT_NAMES.slice(0,6).forEach(n=>rows.push({name:n+' 🤖',val:Math.floor(Math.random()*myVal*2+1),me:false}));
- rows.sort((a,b)=>b.val-a.val);
- body.innerHTML=rows.map((r,i)=>'<div class="lbRow'+(r.me?' me':'')+'">#'+(i+1)+' '+r.name+(r.me?' (You)':' (Simulated)')+'<span>'+r.val+'</span></div>').join('');
-}
-
-/* ---- Ranked ---- */
-function renderRanked(){
- const o=loadOnlineStats();
- const r=getRank(o.rankPoints);
- const badge=document.getElementById('rankedBadgeBig');
- badge.textContent=r.name; badge.className='rankBadge rank-'+r.name;
- document.getElementById('rankedPoints').textContent='Rank Points: '+o.rankPoints+' | Wins: '+(o.wins||0)+' | Losses: '+(o.losses||0);
- const idx=RANKS.indexOf(r);
- const next=RANKS[idx+1];
- const bar=document.getElementById('rankedProgressBar');
- if(next){const pct=Math.min(100,((o.rankPoints-r.min)/(next.min-r.min))*100);bar.style.width=pct+'%';}
- else bar.style.width='100%';
-}
-
-/* ---- Tournament (local bracket, simulated opponents) ---- */
-function startTournament(size){
- const p=loadPlayerProfile();
- const names=[p?p.username:'You'];
- while(names.length<size) names.push(BOT_NAMES[Math.floor(Math.random()*BOT_NAMES.length)]+'#'+names.length);
- for(let i=names.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[names[i],names[j]]=[names[j],names[i]];}
- window.__tournament={round:names,you:p?p.username:'You'};
- renderTournamentBracket();
-}
-function renderTournamentBracket(){
- const t=window.__tournament;
- document.getElementById('tournamentSetup').style.display=t?'none':'block';
- const el=document.getElementById('tournamentBracket');
- if(!t){el.innerHTML='';return;}
- let html='<h3>Round of '+t.round.length+'</h3>';
- for(let i=0;i<t.round.length;i+=2){
-   const a=t.round[i],b=t.round[i+1];
-   const involvesYou=a===t.you||b===t.you;
-   html+='<div class="bracketMatch">'+a+' vs '+b+(involvesYou?' <button onclick="playTournamentMatch()">▶ Play</button>':' (auto-simulated)')+'</div>';
- }
- el.innerHTML=html;
-}
-function playTournamentMatch(){beginOnlineMatch('ttt','Tournament Opponent');}
-function advanceTournament(didWin){
- const t=window.__tournament;
- if(!t) return;
- const nextRound=[];
- for(let i=0;i<t.round.length;i+=2){
-   const a=t.round[i],b=t.round[i+1];
-   if(a===t.you||b===t.you){ nextRound.push(didWin?t.you:(a===t.you?b:a)); }
-   else nextRound.push(Math.random()<0.5?a:b);
- }
- if(!didWin){ showPopup('Tournament Eliminated','You were eliminated from the tournament.','error'); window.__tournament=null; show('onlineHub'); return; }
- if(nextRound.length===1){ showPopup('Tournament Champion','🏆 You won the tournament!','success'); showToast('🎉 Tournament Champion!'); if(typeof addRemo==='function') addRemo(100); window.__tournament=null; show('onlineHub'); return; }
- t.round=nextRound;
- show('tournamentScreen');
- renderTournamentBracket();
-}
-
-/* ---- Chat (quick messages; syncs across tabs in the same room via localStorage) ---- */
-function sendQuickChat(msg){
- const box=document.getElementById('matchChatBox');
- if(!box) return;
- const p=loadPlayerProfile();
- const line=document.createElement('div');
- line.className='chatMsg';
- line.textContent=(p?p.displayName:'You')+': '+msg;
- box.appendChild(line);
- box.scrollTop=box.scrollHeight;
-}
-</script>
 
 <script>
 /* ================= PREMIUM ANIMATION PRIMITIVES ================= */
@@ -5582,7 +5278,7 @@ img,canvas{display:block;}
 <!-- ================= ACHIEVEMENTS ================= -->
 <section class="xa-screen" id="xa-screen-achievements" data-screen="achievements">
   <div class="xa-topbar">
-    <button class="xa-btn xa-icon-btn" data-xa-home aria-label="Back to XArcade Runner">⬅ Back</button>
+    <button class="xa-btn xa-icon-btn" data-xa-home>⬅</button>
     <div class="xa-title">🏆 Achievements</div>
   </div>
   <div class="xa-stack" id="xa-achList" style="overflow-y:auto"></div>
@@ -5613,7 +5309,7 @@ img,canvas{display:block;}
 <!-- ================= INDEPENDENCE EVENT ================= -->
 <section class="xa-screen" id="xa-screen-event" data-screen="event">
   <div class="xa-topbar">
-    <button class="xa-btn xa-icon-btn" data-xa-home aria-label="Back to XArcade Runner">⬅ Back</button>
+    <button class="xa-btn xa-icon-btn" data-xa-home>⬅</button>
     <div class="xa-title">🎇 Independence Event</div>
   </div>
   <div class="xa-panel" id="xa-eventStatusPanel" style="margin-bottom:10px; text-align:center; font-size:12.5px; font-weight:700"></div>
@@ -6500,7 +6196,7 @@ function doSpin(){
     const prize=SPIN_PRIZES[idx];
     if(prize.give.coins) addCoins(prize.give.coins);
     if(prize.give.diamonds) addDiamonds(prize.give.diamonds);
-        if(prize.give.booster) SAVE.boosterActive=true;
+    if(prize.give.booster) SAVE.boosterActive=true;
     saveGame();
     showRewardPopup('🎡 You won: '+prize.label+'!', 'Spin again anytime for '+SPIN_COST+' 💎.');
     wheel.style.transition='none';
@@ -6636,6 +6332,11 @@ function endRun(){
   document.getElementById('xa-goCoins').textContent=runCoins;
   document.getElementById('xa-goDiamonds').textContent=runDiamonds;
   document.getElementById('xa-goBadge').innerHTML = isNewBest ? '<div class="xa-new-badge">🏆 NEW BEST SCORE!</div>' : '';
+  // Bridge this run's collectibles into the main collection's Remo/Diamond
+  // economy — 1 in-run coin = 1 Remo, 1 in-run diamond = 1 Diamond. This is
+  // the actual payout now that the runner's own separate shop is gone.
+  if(runCoins>0 && typeof window.addRemo==='function') window.addRemo(runCoins);
+  if(runDiamonds>0 && typeof window.addDiamonds==='function') window.addDiamonds(runDiamonds);
   showOverlay('xa-ovGameOver');
   if(isNewBest && SAVE.equipped.effect==='victoryDance'){ burstConfetti(); }
   if(SAVE.equipped.effect==='confetti') burstConfetti();
