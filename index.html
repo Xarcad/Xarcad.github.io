@@ -1337,6 +1337,7 @@ addRemo(0);
 function show(id){
  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
  document.getElementById(id).classList.add('active');
+ if(id==='games'){ if(typeof resumeStarfield==='function') resumeStarfield(); } else { if(typeof pauseStarfield==='function') pauseStarfield(); }
  const ov=document.getElementById('settingsOverlay');
  if(ov) ov.classList.remove('open');
  if(id==='games' && typeof syncHudBar==='function') syncHudBar();
@@ -1576,10 +1577,10 @@ const streakEl=document.getElementById('streak'),celebrateBox=document.getElemen
 
 const cv=document.getElementById('bg'),cx=cv.getContext('2d');
 function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();onresize=rs;
-let pts=[...Array(120)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:1+Math.random()*3}));
+let pts=[...Array(45)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:1+Math.random()*3}));
 window.__starfieldRunning=true;
 function resumeStarfield(){ if(!window.__starfieldRunning){ window.__starfieldRunning=true; requestAnimationFrame(anim); } }
-function pauseStarfield(){ window.__starfieldRunning=false; }
+function pauseStarfield(){ window.__starfieldRunning=false; } document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseStarfield();else resumeStarfield();});
 function anim(){
   if(!window.__starfieldRunning) return; // fully stops scheduling — not just an invisible skip
   cx.clearRect(0,0,cv.width,cv.height);
@@ -2624,7 +2625,7 @@ function step(){
 
  ball.x+=ball.vx; ball.y+=ball.vy;
  ballTrail.push({x:ball.x,y:ball.y,born:performance.now()});
- while(ballTrail.length>22) ballTrail.shift();
+ while(ballTrail.length>12) ballTrail.shift();
 
  if(ball.x<-HALF_W+BR){ ball.x=-HALF_W+BR; ball.vx*=-1; sfxWall(); }
  else if(ball.x>HALF_W-BR){ ball.x=HALF_W-BR; ball.vx*=-1; sfxWall(); }
@@ -2636,7 +2637,11 @@ function step(){
  if(ball.y+BR>=HALF_H){ scorePoint(1); return; }
 }
 
-function loop(){ step(); draw(); requestAnimationFrame(loop); }
+function loop(){
+  const active=document.getElementById('pong')?.classList.contains('active');
+  if(active && started){ step(); draw(); }
+  requestAnimationFrame(loop);
+}
 loop();
 },300);
 </script>
@@ -5131,35 +5136,7 @@ function renderStatistics(){
 }
 
 /* ===== Animated particle/star background ===== */
-(function(){
- const c=document.getElementById('bg');
- if(!c) return;
- const g=c.getContext('2d');
- function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
- resize();
- window.addEventListener('resize',resize);
- const stars=[];
- for(let i=0;i<80;i++){
-   stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.6+.3,speed:Math.random()*.3+.05,hue:Math.random()<0.5?190:280});
- }
- function frame(){
-   g.fillStyle='rgba(5,8,22,0.4)';
-   g.fillRect(0,0,c.width,c.height);
-   for(const st of stars){
-     st.y+=st.speed;
-     if(st.y>c.height){st.y=0;st.x=Math.random()*c.width;}
-     g.beginPath();
-     g.fillStyle='hsla('+st.hue+',100%,70%,0.8)';
-     g.shadowBlur=6;
-     g.shadowColor='hsla('+st.hue+',100%,60%,0.9)';
-     g.arc(st.x,st.y,st.r,0,Math.PI*2);
-     g.fill();
-   }
-   requestAnimationFrame(frame);
- }
- frame();
-})();
-
+/* The main #bg starfield is initialized once above. The old second loop caused two RAF loops to draw on the same canvas and created major mobile lag. */
 document.addEventListener('DOMContentLoaded',syncHudBar);
 </script>
 
@@ -5805,10 +5782,10 @@ spawnParticles=function(x,y,opts){ _origSpawnParticles(x,y,opts); ensureFxLoop()
 function fireworksBurst(){
  const w=window.innerWidth,h=window.innerHeight;
  for(let i=0;i<4;i++){
-   setTimeout(()=>spawnParticles(w*(0.2+Math.random()*0.6),h*(0.2+Math.random()*0.4),{count:45,spread:8,gravity:0.1,life:70}),i*180);
+   setTimeout(()=>spawnParticles(w*(0.2+Math.random()*0.6),h*(0.2+Math.random()*0.4),{count:28,spread:8,gravity:0.1,life:60}),i*180);
  }
 }
-function confettiBurst(x,y){ spawnParticles(x,y,{count:60,spread:9,gravity:0.2,life:80,colors:['#ffd700','#00e5ff','#ff4df3','#00ff88','#ffffff']}); }
+function confettiBurst(x,y){ spawnParticles(x,y,{count:36,spread:9,gravity:0.2,life:65,colors:['#ffd700','#00e5ff','#ff4df3','#00ff88','#ffffff']}); }
 function sparkleBurst(x,y){ spawnParticles(x,y,{count:16,spread:3,gravity:0,life:40,colors:['#ffffff','#ffd700','#00e5ff'],shape:'circle'}); }
 
 /* ---- Floating text (+50 Remo, YOU WIN!, etc.) ---- */
