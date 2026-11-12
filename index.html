@@ -2048,19 +2048,35 @@ const xwEl=document.getElementById('xw'),owEl=document.getElementById('ow'),dwEl
 const streakEl=document.getElementById('streak'),celebrateBox=document.getElementById('celebrate');
 
 const cv=document.getElementById('bg'),cx=cv.getContext('2d');
-function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();onresize=rs;
-let pts=[...Array(120)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:1+Math.random()*3}));
+function rs(){cv.width=innerWidth;cv.height=innerHeight; if(cx) cx.clearRect(0,0,cv.width,cv.height);}
+rs();window.addEventListener('resize',rs,{passive:true});
+// One lightweight background loop (the previous file also started a second,
+// shadow-heavy starfield on this same canvas, wasting GPU time on every frame).
+let pts=[...Array(72)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:.7+Math.random()*1.5}));
+let lastStarFrame=0;
 window.__starfieldRunning=true;
-function resumeStarfield(){ if(!window.__starfieldRunning){ window.__starfieldRunning=true; requestAnimationFrame(anim); } }
+function resumeStarfield(){ if(!window.__starfieldRunning && !document.hidden){ window.__starfieldRunning=true; lastStarFrame=0; requestAnimationFrame(anim); } }
 function pauseStarfield(){ window.__starfieldRunning=false; }
-function anim(){
-  if(!window.__starfieldRunning) return; // fully stops scheduling — not just an invisible skip
-  cx.clearRect(0,0,cv.width,cv.height);
-  cx.fillStyle=window.__starColor||'#00e5ff';
-  pts.forEach(p=>{p.y+=p.v;if(p.y>innerHeight){p.y=0;p.x=Math.random()*innerWidth;}cx.fillRect(p.x,p.y,2,2)});
+function anim(timestamp){
+  if(!window.__starfieldRunning || document.hidden) return;
+  // Keep decorative background work at 30fps; gameplay remains full-frame.
+  if(timestamp-lastStarFrame>=33){
+    lastStarFrame=timestamp;
+    cx.clearRect(0,0,cv.width,cv.height);
+    cx.fillStyle=window.__starColor||'#00e5ff';
+    for(let i=0;i<pts.length;i++){
+      const p=pts[i]; p.y+=p.v;
+      if(p.y>cv.height){p.y=0;p.x=Math.random()*cv.width;}
+      cx.fillRect(p.x,p.y,2,2);
+    }
+  }
   requestAnimationFrame(anim);
 }
-anim();
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden) pauseStarfield();
+  else { const nsRoot=document.getElementById('ns-root'); if(!nsRoot || nsRoot.classList.contains('ns-hidden')) resumeStarfield(); }
+});
+anim(0);
 
 
 let rpsYou=0,rpsAI=0,rpsRoundActive=false;
@@ -3109,7 +3125,12 @@ function step(){
  if(ball.y+BR>=HALF_H){ scorePoint(1); return; }
 }
 
-function loop(){ step(); draw(); requestAnimationFrame(loop); }
+// Run Pong at full refresh rate only during active play. While its menu is
+// open (or the match is paused/over), sleep briefly instead of drawing forever.
+function loop(){
+ if(started && !paused && !roundOver){ step(); draw(); requestAnimationFrame(loop); }
+ else { setTimeout(loop,150); }
+}
 loop();
 },300);
 </script>
@@ -5559,35 +5580,7 @@ function renderStatistics(){
  body.innerHTML=rows.map(r=>'<div class="statRow"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('');
 }
 
-/* ===== Animated particle/star background ===== */
-(function(){
- const c=document.getElementById('bg');
- if(!c) return;
- const g=c.getContext('2d');
- function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
- resize();
- window.addEventListener('resize',resize);
- const stars=[];
- for(let i=0;i<80;i++){
-   stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.6+.3,speed:Math.random()*.3+.05,hue:Math.random()<0.5?190:280});
- }
- function frame(){
-   g.fillStyle='rgba(5,8,22,0.4)';
-   g.fillRect(0,0,c.width,c.height);
-   for(const st of stars){
-     st.y+=st.speed;
-     if(st.y>c.height){st.y=0;st.x=Math.random()*c.width;}
-     g.beginPath();
-     g.fillStyle='hsla('+st.hue+',100%,70%,0.8)';
-     g.shadowBlur=6;
-     g.shadowColor='hsla('+st.hue+',100%,60%,0.9)';
-     g.arc(st.x,st.y,st.r,0,Math.PI*2);
-     g.fill();
-   }
-   requestAnimationFrame(frame);
- }
- frame();
-})();
+/* Duplicate shadow-heavy starfield removed: #bg is animated by the single optimized loop above. */
 
 document.addEventListener('DOMContentLoaded',syncHudBar);
 </script>
