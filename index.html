@@ -2052,7 +2052,7 @@ function rs(){cv.width=innerWidth;cv.height=innerHeight; if(cx) cx.clearRect(0,0
 rs();window.addEventListener('resize',rs,{passive:true});
 // One lightweight background loop (the previous file also started a second,
 // shadow-heavy starfield on this same canvas, wasting GPU time on every frame).
-let pts=[...Array(72)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:.7+Math.random()*1.5}));
+let pts=[...Array(32)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:.45+Math.random()*1.0}));
 let lastStarFrame=0;
 window.__starfieldRunning=true;
 function resumeStarfield(){ if(!window.__starfieldRunning && !document.hidden){ window.__starfieldRunning=true; lastStarFrame=0; requestAnimationFrame(anim); } }
@@ -2060,14 +2060,14 @@ function pauseStarfield(){ window.__starfieldRunning=false; }
 function anim(timestamp){
   if(!window.__starfieldRunning || document.hidden) return;
   // Keep decorative background work at 30fps; gameplay remains full-frame.
-  if(timestamp-lastStarFrame>=33){
+  if(timestamp-lastStarFrame>=42){
     lastStarFrame=timestamp;
     cx.clearRect(0,0,cv.width,cv.height);
     cx.fillStyle=window.__starColor||'#00e5ff';
     for(let i=0;i<pts.length;i++){
       const p=pts[i]; p.y+=p.v;
       if(p.y>cv.height){p.y=0;p.x=Math.random()*cv.width;}
-      cx.fillRect(p.x,p.y,2,2);
+      cx.fillRect(p.x,p.y,1.5,1.5);
     }
   }
   requestAnimationFrame(anim);
@@ -5730,33 +5730,59 @@ function ensureUniqueCode(p){
  return p;
 }
 
+/* Code/referral identity works even when the optional account/ID screens are disabled. */
+function getCodePlayer(){
+ let p=null;
+ try{p=JSON.parse(localStorage.getItem('playerProfile')||'null');}catch(e){}
+ const guestKey='xarcCodeGuestProfile';
+ if(!p){
+   try{p=JSON.parse(localStorage.getItem(guestKey)||'null');}catch(e){}
+   if(!p){
+     const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+     let code='XARC-'; for(let i=0;i<8;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+     p={username:'Guest',uniqueCode:code};
+     try{localStorage.setItem(guestKey,JSON.stringify(p));}catch(e){}
+   }
+ } else if(!p.uniqueCode || !/^XARC-[A-Z0-9]{8}$/i.test(p.uniqueCode)){
+   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+   let code='XARC-'; for(let i=0;i<8;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+   p.uniqueCode=code;
+   try{localStorage.setItem('playerProfile',JSON.stringify(p));}catch(e){}
+ }
+ const data=getReferralData();
+ if(!data[p.uniqueCode]){data[p.uniqueCode]={count:0,remo:0,diamonds:0,owner:p.username||'Guest'};saveReferralData(data);}
+ return p;
+}
 function openCodePanel(){
- const p=ensureUniqueCode(loadPlayerProfile());
- if(!p) return;
- document.getElementById('myUniqueCode').textContent=p.uniqueCode;
- document.getElementById('enterCodeInput').value='';
+ const overlay=document.getElementById('codeOverlay');
+ const codeEl=document.getElementById('myUniqueCode');
+ const input=document.getElementById('enterCodeInput');
+ if(!overlay||!codeEl||!input) return;
+ const p=getCodePlayer();
+ codeEl.textContent=p.uniqueCode;
+ input.value='';
  clearCodeMessage();
- document.getElementById('codeOverlay').classList.add('open');
+ overlay.classList.add('open');
  refreshReferralCount();
 }
-function closeCodePanel(){document.getElementById('codeOverlay').classList.remove('open');}
+function closeCodePanel(){const e=document.getElementById('codeOverlay');if(e)e.classList.remove('open');}
 function clearCodeMessage(){const e=document.getElementById('codeMsg');if(e){e.textContent='';e.className='codeMsg';}}
 function copyMyCode(){
- const p=ensureUniqueCode(loadPlayerProfile());
- if(!p) return;
+ const p=getCodePlayer();
  const done=()=>{const e=document.getElementById('codeMsg');if(e){e.textContent='✅ Code copied';e.className='codeMsg ok';}};
- if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(p.uniqueCode).then(done).catch(done); else done();
+ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(p.uniqueCode).then(done).catch(()=>{const e=document.getElementById('codeMsg');if(e){e.textContent='Select and copy: '+p.uniqueCode;e.className='codeMsg ok';}});
+ else {const e=document.getElementById('codeMsg');if(e){e.textContent='Select and copy: '+p.uniqueCode;e.className='codeMsg ok';}}
 }
 function getReferralData(){try{return JSON.parse(localStorage.getItem('xarcadeReferralData'))||{};}catch(e){return {};}}
 function saveReferralData(d){localStorage.setItem('xarcadeReferralData',JSON.stringify(d));}
-function refreshReferralCount(){const p=ensureUniqueCode(loadPlayerProfile());const d=getReferralData();const count=p&&d[p.uniqueCode]?Math.min(27,d[p.uniqueCode].count||0):0;const el=document.getElementById('referralCount');if(el)el.textContent=count;}
+function refreshReferralCount(){const p=getCodePlayer();const d=getReferralData();const count=d[p.uniqueCode]?Math.min(27,d[p.uniqueCode].count||0):0;const el=document.getElementById('referralCount');if(el)el.textContent=count;}
 function applyCode(){
  const input=document.getElementById('enterCodeInput'),msg=document.getElementById('codeMsg');
+ if(!input||!msg)return;
  const code=(input.value||'').trim().toUpperCase();
- if(code==='ADMIN:DAKSH7'){ closeCodePanel(); openLocalAdmin(); return; }
+ if(code==='ADMIN:DAKSH7'||code==='DAKSH:ADMIN7'){ closeCodePanel(); openLocalAdmin(); return; }
  if(!/^XARC-[A-Z0-9]{8}$/.test(code)){msg.textContent='❌ Enter a valid XARC code.';msg.className='codeMsg err';return;}
- const p=ensureUniqueCode(loadPlayerProfile());
- if(!p){msg.textContent='❌ Create an ID first.';msg.className='codeMsg err';return;}
+ const p=getCodePlayer();
  if(code===p.uniqueCode){msg.textContent='❌ You cannot enter your own code.';msg.className='codeMsg err';return;}
  const applied=JSON.parse(localStorage.getItem('xarcadeAppliedCodes')||'[]');
  if(applied.includes(code)){msg.textContent='❌ You already applied this code.';msg.className='codeMsg err';return;}
