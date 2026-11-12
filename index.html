@@ -170,8 +170,8 @@ button:hover{transform:scale(1.05)}
 
 
 /* ===== Unique Code System ===== */
-.codeOverlay{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;z-index:10001;padding:16px;box-sizing:border-box}
-.codeOverlay.open{display:flex}
+.codeOverlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:300001!important;padding:16px;box-sizing:border-box;pointer-events:auto!important}
+.codeOverlay.open{display:flex!important;visibility:visible!important;opacity:1!important}
 .codeBox{background:linear-gradient(145deg,rgba(5,12,28,.98),rgba(10,16,38,.98));border:2px solid #2b73ff;border-radius:22px;padding:24px 20px;max-width:380px;width:92%;box-shadow:0 0 40px rgba(0,110,255,.35),inset 0 0 25px rgba(0,229,255,.04);text-align:center}
 .codeTitle{font-size:24px;font-weight:800;margin:0 0 14px;color:#fff}
 .uniqueCodeValue{font-size:26px;font-weight:900;letter-spacing:4px;color:#00e5ff;background:rgba(0,229,255,.08);border:1.5px solid #00e5ff;border-radius:12px;padding:13px 8px;margin:8px 0 18px;user-select:all}
@@ -1325,7 +1325,7 @@ html.idMakingNoScroll,body.idMakingNoScroll{overflow:hidden!important;height:100
 <div class="gameCard" onclick="rippleNav(event,()=>{ if(window.nsOpen) window.nsOpen(); })"><span class="cardIcon">🔢</span><div class="cardName">Number Slide</div><div class="cardSub">Slide tiles into number order</div></div>
 <div class="gameCard" onclick="rippleNav(event,()=>{renderPassShop();show('passShop');})"><span class="cardIcon">🎟️</span><div class="cardName">Game Passes</div><div class="cardSub">Explore passes and special perks</div></div>
 <div class="gameCard" onclick="rippleNav(event,()=>openCurrencyExchange())"><span class="cardIcon">💱</span><div class="cardName">Money Exchange</div><div class="cardSub">Convert currencies and compare values</div></div>
-<div class="gameCard" onclick="openCodePanel()"><span class="cardIcon">🔑</span><div class="cardName">Code</div><div class="cardSub">Redeem a code for rewards</div></div>
+<div class="gameCard" id="openCodeCard" onclick="window.openCodePanel()"><span class="cardIcon">🔑</span><div class="cardName">Code</div><div class="cardSub">Redeem a code for rewards</div></div>
 <div class="gameCard" onclick="rippleNav(event,()=>{renderShop();show('shop');})"><span class="cardIcon">🛒</span><div class="cardName">Shop</div><div class="cardSub">Spend Remo on useful items</div></div>
 <div class="gameCard" onclick="rippleNav(event,()=>{renderTasks();show('tasks');})"><span class="cardIcon">🎯</span><div class="cardName">Daily Tasks</div><div class="cardSub">Complete tasks to earn rewards</div></div>
 <div class="gameCard" onclick="rippleNav(event,()=>{renderLogin();show('login');})"><span class="cardIcon">📅</span><div class="cardName">Daily Login</div><div class="cardSub">Claim rewards for logging in</div></div>
@@ -5757,15 +5757,27 @@ function openCodePanel(){
  const overlay=document.getElementById('codeOverlay');
  const codeEl=document.getElementById('myUniqueCode');
  const input=document.getElementById('enterCodeInput');
- if(!overlay||!codeEl||!input) return;
- const p=getCodePlayer();
- codeEl.textContent=p.uniqueCode;
+ if(!overlay||!codeEl||!input){console.warn('X-Arcade Code panel elements are missing');return false;}
+ let p;
+ try{p=getCodePlayer();}catch(err){
+   console.warn('Code storage unavailable; opening temporary guest code',err);
+   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='XARC-';
+   for(let i=0;i<8;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+   p={username:'Guest',uniqueCode:code};
+ }
+ codeEl.textContent=p.uniqueCode||'XARC-LOCAL01';
  input.value='';
  clearCodeMessage();
+ overlay.style.display='flex';
+ overlay.style.visibility='visible';
+ overlay.style.pointerEvents='auto';
  overlay.classList.add('open');
- refreshReferralCount();
+ try{refreshReferralCount();}catch(err){console.warn('Referral count unavailable',err);}
+ return true;
 }
-function closeCodePanel(){const e=document.getElementById('codeOverlay');if(e)e.classList.remove('open');}
+window.openCodePanel=openCodePanel;
+function closeCodePanel(){const e=document.getElementById('codeOverlay');if(e){e.classList.remove('open');e.style.display='none';}}
+window.closeCodePanel=closeCodePanel;
 function clearCodeMessage(){const e=document.getElementById('codeMsg');if(e){e.textContent='';e.className='codeMsg';}}
 function copyMyCode(){
  const p=getCodePlayer();
@@ -5774,7 +5786,7 @@ function copyMyCode(){
  else {const e=document.getElementById('codeMsg');if(e){e.textContent='Select and copy: '+p.uniqueCode;e.className='codeMsg ok';}}
 }
 function getReferralData(){try{return JSON.parse(localStorage.getItem('xarcadeReferralData'))||{};}catch(e){return {};}}
-function saveReferralData(d){localStorage.setItem('xarcadeReferralData',JSON.stringify(d));}
+function saveReferralData(d){try{localStorage.setItem('xarcadeReferralData',JSON.stringify(d));}catch(e){console.warn('Referral data could not be saved',e);}}
 function refreshReferralCount(){const p=getCodePlayer();const d=getReferralData();const count=d[p.uniqueCode]?Math.min(27,d[p.uniqueCode].count||0):0;const el=document.getElementById('referralCount');if(el)el.textContent=count;}
 function applyCode(){
  const input=document.getElementById('enterCodeInput'),msg=document.getElementById('codeMsg');
@@ -5796,6 +5808,10 @@ function applyCode(){
  applied.push(code);localStorage.setItem('xarcadeAppliedCodes',JSON.stringify(applied));localStorage.setItem('appliedXArcadeCode',code);
  msg.textContent='✅ Code applied! You got 🪙 50 + 💎 5.';msg.className='codeMsg ok';refreshReferralCount();
 }
+
+window.applyCode=applyCode;
+window.copyMyCode=copyMyCode;
+window.clearCodeMessage=clearCodeMessage;
 
 function ensureLatestPlayerId(p){
   if(!p) return p;
